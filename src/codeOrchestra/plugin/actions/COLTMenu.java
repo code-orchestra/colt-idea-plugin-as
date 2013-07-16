@@ -108,7 +108,7 @@ public class COLTMenu extends AnAction {
         final FlexBuildConfiguration activeBC = FlexBuildConfigurationManager.getInstance(module).getActiveConfiguration();
 
         project.setCustomConfigPath(activeBC.getCompilerOptions().getAdditionalConfigFilePath());
-        //project.setMainClass("/Users/user/TMP/OriginalProject/src/com/codeorchestra/Tree.as");
+        project.setMainClass(FlexUtils.getPathToMainClassFile(activeBC.getMainClass(), module));
 
         project.setOutputFileName(activeBC.getOutputFileName());
         project.setOutputPath(workDir + "/output");
