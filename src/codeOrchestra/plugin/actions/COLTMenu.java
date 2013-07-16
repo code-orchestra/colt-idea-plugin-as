@@ -7,6 +7,7 @@ import codeOrchestra.rpc.COLTRemoteTransferableException;
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import com.googlecode.jsonrpc4j.ProxyUtil;
 import com.intellij.lang.javascript.flex.FlexModuleType;
+import com.intellij.lang.javascript.flex.FlexUtils;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfiguration;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfigurationManager;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -22,6 +23,7 @@ import com.intellij.openapi.ui.Messages;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.io.File;
 
 /**
  * Created with IntelliJ IDEA.
@@ -88,6 +90,8 @@ public class COLTMenu extends AnAction {
         String modulePath = moduleRootManager.getContentRootUrls()[0].replace("file://", "");
 
         String workDir = modulePath + "/colt";
+
+        (new File(workDir)).mkdir();
 
         String moduleName = module.getName();
 
