@@ -3,9 +3,9 @@ package codeOrchestra.rcp.client;
 import codeOrchestra.lcs.rpc.model.COLTCompilationResult;
 import codeOrchestra.lcs.rpc.model.COLTRemoteProject;
 import codeOrchestra.lcs.rpc.model.COLTState;
-import codeOrchestra.rpc.COLTRemoteTransferableException;
-import codeOrchestra.rpc.security.InvalidShortCodeException;
-import codeOrchestra.rpc.security.TooManyFailedCodeTypeAttemptsException;
+import codeOrchestra.lcs.rpc.COLTRemoteTransferableException;
+import codeOrchestra.lcs.rpc.security.InvalidShortCodeException;
+import codeOrchestra.lcs.rpc.security.TooManyFailedCodeTypeAttemptsException;
 
 /**
  * @author Alexander Eliseyev

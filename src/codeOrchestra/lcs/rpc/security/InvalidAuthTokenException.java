@@ -1,6 +1,6 @@
-package codeOrchestra.rpc.security;
+package codeOrchestra.lcs.rpc.security;
 
-import codeOrchestra.rpc.COLTRemoteTransferableException;
+import codeOrchestra.lcs.rpc.COLTRemoteTransferableException;
 
 /**
  * @author Alexander Eliseyev

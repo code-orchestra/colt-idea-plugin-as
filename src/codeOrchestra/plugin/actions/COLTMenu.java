@@ -1,12 +1,13 @@
 package codeOrchestra.plugin.actions;
 
 import codeOrchestra.lcs.rpc.model.COLTRemoteProject;
+import codeOrchestra.lcs.rpc.security.InvalidShortCodeException;
+import codeOrchestra.lcs.rpc.security.TooManyFailedCodeTypeAttemptsException;
 import codeOrchestra.plugin.COLTSettings;
 import codeOrchestra.rcp.client.COLTRemoteService;
-import codeOrchestra.rpc.COLTRemoteTransferableException;
+import codeOrchestra.lcs.rpc.COLTRemoteTransferableException;
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import com.googlecode.jsonrpc4j.ProxyUtil;
-import com.intellij.lang.javascript.flex.FlexModuleType;
 import com.intellij.lang.javascript.flex.FlexUtils;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfiguration;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfigurationManager;
@@ -15,7 +16,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.ui.Messages;
@@ -26,11 +26,8 @@ import java.util.ArrayList;
 import java.io.File;
 
 /**
- * Created with IntelliJ IDEA.
- * User: dimakruk
- * Date: 7/11/13
- * Time: 4:17 PM
- * To change this template use File | Settings | File Templates.
+ * @author Dima Kruk
+ * @author Alexander Eliseyev
  */
 public class COLTMenu extends AnAction {
 
@@ -51,9 +48,10 @@ public class COLTMenu extends AnAction {
             ex.printStackTrace();
         }
 
-        if (coltRemoteService != null && coltSettings.getSecurityToken().isEmpty())
-        {
+        if (coltRemoteService != null && coltSettings.getSecurityToken().isEmpty()) {
             makeNewSecurityToken();
+        } else {
+            // TODO: eliseyev - else ???
         }
 
         project = e.getData(PlatformDataKeys.PROJECT);
@@ -127,21 +125,43 @@ public class COLTMenu extends AnAction {
         }
     }
 
-    private void makeNewSecurityToken()
+    private boolean makeNewSecurityToken()
     {
         try {
-            coltRemoteService.requestShortCode("IDEA");
-            String txt = Messages.showInputDialog(project, "Put key from COLT", "Input key", Messages.getQuestionIcon());
-            if (txt != null && !txt.isEmpty()) {
-                String token = coltRemoteService.obtainAuthToken(txt);
-                COLTSettings.getInstance().setSecurityToken(token);
-                Messages.showInfoMessage("Key is correct", "COLT Property");
-            } else {
-                Messages.showInfoMessage("Key isn't correct", "COLT Property");
-            }
+            coltRemoteService.requestShortCode("COLT IntelliJ IDEA Plugin");
         } catch (COLTRemoteTransferableException e) {
-            e.printStackTrace();
+            Messages.showErrorDialog("Can't request an authorization key from COLT.\nMake sure COLT is active and running", "COLT Connectivity");
+            return false;
         }
+
+        String txt = Messages.showInputDialog(project, "Put key from COLT", "Input key", Messages.getQuestionIcon());
+        if (txt != null && !txt.isEmpty()) {
+            String token = null;
+            try {
+                token = coltRemoteService.obtainAuthToken(txt);
+            } catch (TooManyFailedCodeTypeAttemptsException e) {
+                Messages.showErrorDialog("Too many failed code input attempts, try again later", "COLT Connectivity");
+                return false;
+            } catch (InvalidShortCodeException e) {
+                int result = Messages.showDialog("Invalid short code entered", "COLT Connectivity", new String[]{
+                        "Try again", "Cancel"
+                }, 0, Messages.getWarningIcon());
+
+                if (result == 0) {
+                    return makeNewSecurityToken();
+                }
+
+                return false;
+            }
+
+            COLTSettings.getInstance().setSecurityToken(token);
+            Messages.showInfoMessage("Connected to ", "COLT Connectivity");
+        } else {
+            Messages.showInfoMessage("Key isn't correct", "COLT Connectivity");
+            // TODO: try again
+        }
+
+        return false;
     }
 
     private COLTRemoteService getColtRemoteService() throws MalformedURLException {

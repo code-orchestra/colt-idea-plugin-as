@@ -1,4 +1,4 @@
-package codeOrchestra.rpc;
+package codeOrchestra.lcs.rpc;
 
 /**
  * @author Alexander Eliseyev
