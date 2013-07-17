@@ -2,14 +2,12 @@ package codeOrchestra.plugin;
 
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.*;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Created with IntelliJ IDEA.
- * User: dimakruk
- * Date: 7/15/13
- * Time: 12:37 PM
- * To change this template use File | Settings | File Templates.
+ * @author Dima Kruk
+ * @author Alexander Eliseyev
  */
 @State(
     name = "COLTSettings",
@@ -29,6 +27,14 @@ public class COLTSettings implements PersistentStateComponent<COLTSettings.State
     @Override
     public void loadState(State state) {
         myState = state;
+    }
+
+    public boolean isEmpty() {
+        return StringUtils.isEmpty(getSecurityToken());
+    }
+
+    public void invalidate() {
+        setSecurityToken("");
     }
 
     public static class State {

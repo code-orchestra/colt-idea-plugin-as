@@ -1,4 +1,4 @@
-package codeOrchestra.rcp.client;
+package codeOrchestra.lcs.rpc;
 
 import codeOrchestra.lcs.rpc.model.COLTCompilationResult;
 import codeOrchestra.lcs.rpc.model.COLTRemoteProject;
@@ -23,6 +23,8 @@ public interface COLTRemoteService {
     COLTState getState(String securityToken) throws COLTRemoteTransferableException;
 
     COLTCompilationResult runBaseCompilation(String securityToken) throws COLTRemoteTransferableException;
+
+    COLTCompilationResult runProductionCompilation(String securityToken, boolean run) throws COLTRemoteTransferableException;
 
     void createProject(String securityToken, COLTRemoteProject project) throws COLTRemoteTransferableException;
 
