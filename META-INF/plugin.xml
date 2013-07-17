@@ -35,9 +35,9 @@
   </project-components>
 
   <actions>
-      <group id="MyPlugin.SampleMenu" text="COLT" description="Sample menu">
+      <group id="MyPlugin.SampleMenu" text="COLT" description="COLT plugin menu">
           <add-to-group group-id="MainMenu" anchor="last"  />
-          <action id="Myplugin.TextBoxes" class="codeOrchestra.plugin.actions.COLTMenu" text="Save" description="Save COLT project file" />
+          <action id="Myplugin.TextBoxes" class="codeOrchestra.plugin.actions.COLTExportAction" text="Export COLT Project" description="Save COLT project file" />
       </group>
   </actions>
 

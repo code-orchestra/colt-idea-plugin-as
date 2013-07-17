@@ -30,14 +30,14 @@ import java.io.File;
  * @author Dima Kruk
  * @author Alexander Eliseyev
  */
-public class COLTMenu extends AnAction {
+public class COLTExportAction extends AnAction {
 
     public static final String COLT_TITLE = "COLT Connectivity";
     private COLTRemoteService coltRemoteService;
     private Project project;
 
-    public COLTMenu() {
-        super("COLT Menu");
+    public COLTExportAction() {
+        super("Export COLT Project");
     }
 
     @Override
