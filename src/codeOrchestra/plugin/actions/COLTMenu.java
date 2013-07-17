@@ -19,6 +19,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.ui.Messages;
+import org.apache.commons.lang.StringUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,6 +32,7 @@ import java.io.File;
  */
 public class COLTMenu extends AnAction {
 
+    public static final String COLT_TITLE = "COLT Connectivity";
     private COLTRemoteService coltRemoteService;
     private Project project;
 
@@ -49,7 +51,7 @@ public class COLTMenu extends AnAction {
         }
 
         if (coltRemoteService != null && coltSettings.getSecurityToken().isEmpty()) {
-            makeNewSecurityToken();
+            makeNewSecurityToken(true);
         } else {
             // TODO: eliseyev - else ???
         }
@@ -58,13 +60,13 @@ public class COLTMenu extends AnAction {
 
         Module[] allModules = ModuleManager.getInstance(project).getModules();
 
-        saveConfigurationForMonule(allModules[0]);
+        saveConfigurationForModule(allModules[0]);
     }
 
-    private void saveConfigurationForMonule(Module module)
+    private void saveConfigurationForModule(Module module)
     {
-        ArrayList<String> lib_paths = new ArrayList<String>();
-        ArrayList<String> src_paths = new ArrayList<String>();
+        ArrayList<String> libPaths = new ArrayList<String>();
+        ArrayList<String> srcPaths = new ArrayList<String>();
 
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
@@ -72,7 +74,7 @@ public class COLTMenu extends AnAction {
         for (int j = 0; j < orderEntries.length; j++) {
             if (orderEntries[j] instanceof LibraryOrderEntry)
             {
-                lib_paths.add(orderEntries[j].getPresentableName());
+                libPaths.add(orderEntries[j].getPresentableName());
             }
         }
         final ContentEntry[] content = moduleRootManager.getContentEntries();
@@ -80,7 +82,7 @@ public class COLTMenu extends AnAction {
             final SourceFolder[] sourceFolders = contentEntry.getSourceFolders();
             for (SourceFolder sourceFolder : sourceFolders) {
                 final String url = sourceFolder.getUrl().replace("file://", "");
-                src_paths.add(url);
+                srcPaths.add(url);
             }
         }
 
@@ -99,8 +101,8 @@ public class COLTMenu extends AnAction {
         project.setParentIDEProjectPath(modulePath);
         project.setPath(workDir + "/" + moduleName + ".colt");
 
-        project.setSources(src_paths.toArray(new String[]{}));
-        project.setLibraries(lib_paths.toArray(new String[]{}));
+        project.setSources(srcPaths.toArray(new String[]{}));
+        project.setLibraries(libPaths.toArray(new String[]{}));
 //        project.setAssets(new String[]{"/Users/user/TMP/OriginalProject/assets"});
 //        project.setHtmlTemplateDir("/Users/user/TMP/OriginalProject/html_template");
 
@@ -125,40 +127,46 @@ public class COLTMenu extends AnAction {
         }
     }
 
-    private boolean makeNewSecurityToken()
-    {
-        try {
-            coltRemoteService.requestShortCode("COLT IntelliJ IDEA Plugin");
-        } catch (COLTRemoteTransferableException e) {
-            Messages.showErrorDialog("Can't request an authorization key from COLT.\nMake sure COLT is active and running", "COLT Connectivity");
-            return false;
+    private boolean makeNewSecurityToken(boolean newRequest) {
+        if (newRequest) {
+            try {
+                coltRemoteService.requestShortCode("COLT IntelliJ IDEA Plugin");
+            } catch (COLTRemoteTransferableException e) {
+                Messages.showErrorDialog("Can't request an authorization key from COLT.\nMake sure COLT is active and running", COLT_TITLE);
+                return false;
+            }
         }
 
-        String txt = Messages.showInputDialog(project, "Put key from COLT", "Input key", Messages.getQuestionIcon());
-        if (txt != null && !txt.isEmpty()) {
-            String token = null;
+        String shortCode = Messages.showInputDialog(project, "Enter the short key displayed in COLT", COLT_TITLE, Messages.getQuestionIcon());
+        if (StringUtils.isNotEmpty(shortCode)) {
+            String token;
             try {
-                token = coltRemoteService.obtainAuthToken(txt);
+                token = coltRemoteService.obtainAuthToken(shortCode);
             } catch (TooManyFailedCodeTypeAttemptsException e) {
-                Messages.showErrorDialog("Too many failed code input attempts, try again later", "COLT Connectivity");
+                Messages.showErrorDialog("Too many failed code input attempts, try again later", COLT_TITLE);
                 return false;
             } catch (InvalidShortCodeException e) {
-                int result = Messages.showDialog("Invalid short code entered", "COLT Connectivity", new String[]{
+                int result = Messages.showDialog("Invalid short code entered", COLT_TITLE, new String[] {
                         "Try again", "Cancel"
                 }, 0, Messages.getWarningIcon());
 
                 if (result == 0) {
-                    return makeNewSecurityToken();
+                    return makeNewSecurityToken(false);
                 }
 
                 return false;
             }
 
             COLTSettings.getInstance().setSecurityToken(token);
-            Messages.showInfoMessage("Connected to ", "COLT Connectivity");
+            Messages.showInfoMessage("Successfully connected to COLT", COLT_TITLE);
         } else {
-            Messages.showInfoMessage("Key isn't correct", "COLT Connectivity");
-            // TODO: try again
+            int result = Messages.showDialog("Empty short code entered", COLT_TITLE, new String[] {
+                    "Try again", "Cancel"
+            }, 0, Messages.getWarningIcon());
+
+            if (result == 0) {
+                return makeNewSecurityToken(false);
+            }
         }
 
         return false;
