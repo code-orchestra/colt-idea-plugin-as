@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.io.File;
 
 /**
  * @author Dima Kruk
@@ -126,17 +127,16 @@ public class COLTSettings implements PersistentStateComponent<COLTSettings.State
         return "COLT Settings";
     }
 
+    public boolean isCOLTPathValid() {
+        return validateCOLTPath(getCOLTPath());
+    }
+
     public String getCOLTPath() {
         return myState.coltPath;
     }
 
     public void setCOLTPath(String path) {
         myState.coltPath = path;
-    }
-
-    public static class State {
-        public String securityToken = "";
-        public String coltPath = "";
     }
 
     public String getSecurityToken() {
@@ -146,4 +146,21 @@ public class COLTSettings implements PersistentStateComponent<COLTSettings.State
     public void setSecurityToken(String token) {
         myState.securityToken = token;
     }
+
+    public static boolean validateCOLTPath(String coltPath) {
+        if (StringUtils.isEmpty(coltPath)) {
+            return false;
+        }
+
+        File coltDir = new File(coltPath);
+        return coltDir.exists() && coltDir.isDirectory() && new File(coltDir, "flex_sdk").exists();
+    }
+
+    public static class State {
+
+        public String securityToken = "";
+        public String coltPath = "";
+
+    }
+
 }

@@ -65,8 +65,7 @@ public class COLTConfigurationPage {
     public void apply() throws ConfigurationException {
         String coltPath = fileChooser.getText();
 
-        File coltDir = new File(coltPath);
-        if (!coltDir.exists() || !coltDir.isDirectory() || !new File(coltDir, "flex_sdk").exists()) {
+        if (!COLTSettings.validateCOLTPath(coltPath)) {
             throw new ConfigurationException("Invalid COLT location is specified");
         }
 
