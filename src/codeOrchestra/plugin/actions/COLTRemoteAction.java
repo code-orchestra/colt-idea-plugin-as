@@ -61,6 +61,7 @@ public abstract class COLTRemoteAction extends AnAction {
             doRemoteAction(event);
         } catch (InvalidAuthTokenException e) {
             COLTSettings.getInstance().invalidate();
+            actionPerformed(event);
         }
     }
 

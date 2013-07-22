@@ -60,7 +60,7 @@ public class COLTExportAction extends COLTRemoteAction {
         saveConfiguration(modulesPairs);
     }
 
-    private void saveConfiguration(List<Pair<Module, Boolean>> modules) {
+    private void saveConfiguration(List<Pair<Module, Boolean>> modules) throws InvalidAuthTokenException {
         Module mainModule = null;
         for (Pair<Module, Boolean> modulePair : modules) {
             if (modulePair.getSecond()) {
@@ -130,6 +130,8 @@ public class COLTExportAction extends COLTRemoteAction {
 
         try {
             coltRemoteService.createProject(COLTSettings.getInstance().getSecurityToken(), project);
+        } catch (InvalidAuthTokenException t) {
+            throw t;
         } catch (COLTRemoteTransferableException e) {
             // TODO: handle nicely
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

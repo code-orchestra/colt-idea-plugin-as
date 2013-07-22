@@ -63,7 +63,6 @@ public final class COLTRemoteServiceProvider {
             try {
                 token = coltRemoteService.obtainAuthToken(shortCode);
             } catch (TooManyFailedCodeTypeAttemptsException e) {
-
                 Messages.showErrorDialog("Too many failed code input attempts, try again later", COLTRemoteAction.COLT_TITLE);
                 return false;
             } catch (InvalidShortCodeException e) {
@@ -80,6 +79,8 @@ public final class COLTRemoteServiceProvider {
 
             COLTSettings.getInstance().setSecurityToken(token);
             Messages.showInfoMessage("Successfully connected to COLT", COLTRemoteAction.COLT_TITLE);
+
+            return true;
         } else {
             int result = Messages.showDialog("Empty short code entered", COLTRemoteAction.COLT_TITLE, new String[] {
                     "Try again", "Cancel"
