@@ -1,7 +1,6 @@
 package codeOrchestra.plugin;
 
 import codeOrchestra.plugin.view.COLTConfigurationPage;
-import com.apple.eawt.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.*;
@@ -93,17 +92,17 @@ public class COLTSettings implements PersistentStateComponent<COLTSettings.State
 
     @Override
     public boolean isModified() {
-        return false; // TODO: implement
+        return configurationPage.isModified();
     }
 
     @Override
     public void apply() throws ConfigurationException {
-        // TODO: implement
+        configurationPage.apply();
     }
 
     @Override
     public void reset() {
-        // TODO: implement
+        configurationPage.reset();
     }
 
     @Override
@@ -127,15 +126,24 @@ public class COLTSettings implements PersistentStateComponent<COLTSettings.State
         return "COLT Settings";
     }
 
+    public String getCOLTPath() {
+        return myState.coltPath;
+    }
+
+    public void setCOLTPath(String path) {
+        myState.coltPath = path;
+    }
+
     public static class State {
-        public String SECURITY_TOKEN = "";
+        public String securityToken = "";
+        public String coltPath = "";
     }
 
     public String getSecurityToken() {
-        return myState.SECURITY_TOKEN;
+        return myState.securityToken;
     }
 
     public void setSecurityToken(String token) {
-        myState.SECURITY_TOKEN = token;
+        myState.securityToken = token;
     }
 }
