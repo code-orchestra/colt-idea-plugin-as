@@ -27,7 +27,7 @@
   -->
 
   <application-components>
-    <!-- Add your application components here -->
+      <component><implementation-class>codeOrchestra.plugin.COLTSettings</implementation-class></component>
   </application-components>
 
   <project-components>
@@ -41,8 +41,11 @@
       </group>
   </actions>
 
+  <!--
   <extensions defaultExtensionNs="com.intellij">
       <applicationService serviceInterface="codeOrchestra.plugin.COLTSettings"
                           serviceImplementation="codeOrchestra.plugin.COLTSettings"/>
   </extensions>
+  -->
+
 </idea-plugin>

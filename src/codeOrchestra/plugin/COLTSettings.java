@@ -1,9 +1,18 @@
 package codeOrchestra.plugin;
 
+import codeOrchestra.plugin.view.COLTConfigurationPage;
+import com.apple.eawt.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.*;
+import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.SearchableConfigurable;
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * @author Dima Kruk
@@ -11,12 +20,24 @@ import org.jetbrains.annotations.Nullable;
  */
 @State(
     name = "COLTSettings",
-    storages = {@Storage(
-        file = StoragePathMacros.APP_CONFIG + "/colt_settings.xml")}
+    storages = {
+            @Storage(
+                file = StoragePathMacros.APP_CONFIG + "/colt_settings.xml")
+    }
 )
-public class COLTSettings implements PersistentStateComponent<COLTSettings.State> {
+public class COLTSettings implements PersistentStateComponent<COLTSettings.State>, SearchableConfigurable, ApplicationComponent {
 
+    private static COLTSettings instance = null;
+
+    public static COLTSettings getInstance() {
+        if (instance == null) {
+            instance = ApplicationManager.getApplication().getComponent(COLTSettings.class);
+        }
+        return instance;
+    }
     private State myState = new State();
+
+    private COLTConfigurationPage configurationPage;
 
     @Nullable
     @Override
@@ -37,12 +58,77 @@ public class COLTSettings implements PersistentStateComponent<COLTSettings.State
         setSecurityToken("");
     }
 
-    public static class State {
-        public String SECURITY_TOKEN = "";
+    @NotNull
+    @Override
+    public String getId() {
+        return "COLTSettings";
     }
 
-    public static COLTSettings getInstance() {
-        return ServiceManager.getService(COLTSettings.class);
+    @Nullable
+    @Override
+    public Runnable enableSearch(String s) {
+        return null;
+    }
+
+    @Nls
+    @Override
+    public String getDisplayName() {
+        return "COLT";
+    }
+
+    @Nullable
+    @Override
+    public String getHelpTopic() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public synchronized JComponent createComponent() {
+        if (configurationPage == null) {
+            configurationPage = new COLTConfigurationPage(this);
+        }
+        return configurationPage.getContentPane();
+    }
+
+    @Override
+    public boolean isModified() {
+        return false; // TODO: implement
+    }
+
+    @Override
+    public void apply() throws ConfigurationException {
+        // TODO: implement
+    }
+
+    @Override
+    public void reset() {
+        // TODO: implement
+    }
+
+    @Override
+    public synchronized void disposeUIResources() {
+        if (configurationPage != null) {
+            configurationPage.dispose();
+        }
+    }
+
+    @Override
+    public void initComponent() {
+    }
+
+    @Override
+    public void disposeComponent() {
+    }
+
+    @NotNull
+    @Override
+    public String getComponentName() {
+        return "COLT Settings";
+    }
+
+    public static class State {
+        public String SECURITY_TOKEN = "";
     }
 
     public String getSecurityToken() {
