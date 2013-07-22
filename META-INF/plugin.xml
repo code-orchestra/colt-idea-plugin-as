@@ -1,51 +1,32 @@
 <idea-plugin version="2">
-  <id>com.codeOrchestra.plugin.colt</id>
+
+    <id>com.codeOrchestra.plugin.colt</id>
   <name>COLT Plugin</name>
   <version>1.0</version>
-  <vendor email="support@yourcompany.com" url="http://codeorchestra.com/">CodeOrchestra</vendor>
+  <vendor email="support@codeorchestra.com" url="http://codeorchestra.com/">CodeOrchestra</vendor>
 
   <depends>com.intellij.flex</depends>
 
     <description><![CDATA[
-      Enter short description for your plugin here.<br>
-      <small>most HTML tags may be used</small>
+      COLT live coding tool integration plugin
       ]]></description>
 
-  <change-notes><![CDATA[
-      Add change notes here.<br>
-      <small>most HTML tags may be used</small>
-      ]]>
-  </change-notes>
-
-  <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
   <idea-version since-build="107.105"/>
-
-  <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
-       on how to target different products -->
-  <!-- uncomment to enable plugin in all products
-  <depends>com.intellij.modules.lang</depends>
-  -->
 
   <application-components>
       <component><implementation-class>codeOrchestra.plugin.COLTSettings</implementation-class></component>
   </application-components>
 
   <project-components>
-    <!-- Add your project components here -->
+    <!-- Add your ideaProject components here -->
   </project-components>
 
   <actions>
       <group id="MyPlugin.SampleMenu" text="COLT" description="COLT plugin menu">
           <add-to-group group-id="MainMenu" anchor="last"  />
-          <action id="Myplugin.TextBoxes" class="codeOrchestra.plugin.actions.COLTExportAction" text="Export COLT Project" description="Save COLT project file" />
+          <action id="colt.launch" class="codeOrchestra.plugin.actions.COLTLaunchAction" text="Launch COLT" description="Launch COLT" />
+          <action id="colt.export" class="codeOrchestra.plugin.actions.COLTExportAction" text="Export COLT Project" description="Save COLT project file" />
       </group>
   </actions>
-
-  <!--
-  <extensions defaultExtensionNs="com.intellij">
-      <applicationService serviceInterface="codeOrchestra.plugin.COLTSettings"
-                          serviceImplementation="codeOrchestra.plugin.COLTSettings"/>
-  </extensions>
-  -->
 
 </idea-plugin>

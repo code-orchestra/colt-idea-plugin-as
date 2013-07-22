@@ -25,14 +25,14 @@ public abstract class COLTRemoteAction extends AnAction {
     }
 
     protected COLTRemoteService coltRemoteService;
-    protected Project project;
+    protected Project ideaProject;
 
     @Override
     public final void actionPerformed(AnActionEvent event) {
-        // Get the project
-        project = event.getData(PlatformDataKeys.PROJECT);
-        if (project == null) {
-            throw new IllegalStateException("COLT Remote Action must be aware of the current project");
+        // Get the ideaProject
+        ideaProject = event.getData(PlatformDataKeys.PROJECT);
+        if (ideaProject == null) {
+            throw new IllegalStateException("COLT Remote Action must be aware of the current ideaProject");
         }
 
         // Get the service
