@@ -27,6 +27,8 @@ public interface COLTRemoteService {
 
     COLTCompilationResult runBaseCompilation(String securityToken) throws COLTRemoteTransferableException;
 
+    COLTCompilationResult runBaseCompilation(String securityToken, boolean run) throws COLTRemoteTransferableException;
+
     COLTCompilationResult runProductionCompilation(String securityToken, boolean run) throws COLTRemoteTransferableException;
 
     void createProject(String securityToken, COLTRemoteProject project) throws COLTRemoteTransferableException;

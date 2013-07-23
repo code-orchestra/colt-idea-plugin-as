@@ -22,12 +22,16 @@
   </project-components>
 
   <actions>
-      <group id="MyPlugin.SampleMenu" text="COLT" description="COLT plugin menu">
-          <add-to-group group-id="MainMenu" anchor="last"  />
+      <group id="COLT.Menu" text="COLT" description="COLT plugin menu">
+          <add-to-group group-id="MainMenu" anchor="after" relative-to-action="RunMenu" />
           <action id="colt.launch" class="codeOrchestra.plugin.actions.COLTLaunchAction" text="Launch COLT" description="Launch COLT" />
           <action id="colt.export" class="codeOrchestra.plugin.actions.COLTExportAction" text="Export COLT Project" description="Save COLT project file" />
+          <separator/>
           <action id="colt.compile.live" class="codeOrchestra.plugin.actions.COLTLiveBaseCompileAction" text="Live Build" description="Run Base Live Compilation" />
           <action id="colt.compile.production" class="codeOrchestra.plugin.actions.COLTProductionCompileAction" text="Production Build" description="Run Production Compilation" />
+          <separator/>
+          <action id="colt.compile.run.live" class="codeOrchestra.plugin.actions.COLTLiveBaseCompileAndRunAction" text="Live Build and Exec Run" description="Live Build and Exec Run" />
+          <action id="colt.compile.run.production" class="codeOrchestra.plugin.actions.COLTProductionCompileAndRunAction" text="Production Build and Exec Run" description="Production Build and Exec Run" />
       </group>
   </actions>
 
