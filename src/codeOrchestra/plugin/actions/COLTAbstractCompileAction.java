@@ -27,7 +27,7 @@ public abstract class COLTAbstractCompileAction extends COLTRemoteAction {
     }
 
     @Override
-    protected final void doRemoteAction(AnActionEvent event) throws InvalidAuthTokenException {
+    protected final void doRemoteAction(final AnActionEvent event) throws InvalidAuthTokenException {
         coltRemoteService.checkAuth(COLTSettings.getInstance().getSecurityToken());
 
         new Task.Backgroundable(ideaProject, "Live Build", false) {
@@ -35,7 +35,7 @@ public abstract class COLTAbstractCompileAction extends COLTRemoteAction {
             public void run(@NotNull ProgressIndicator progressIndicator) {
                 try {
                     COLTConsole.getInstance(ideaProject).clear();
-                    COLTCompilationResult coltCompilationResult = doRunCompilation();
+                    COLTCompilationResult coltCompilationResult = doRunCompilation(event);
 
                     final IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
                     StatusBarEx statusBar = (StatusBarEx)ideFrame.getStatusBar();
@@ -61,6 +61,6 @@ public abstract class COLTAbstractCompileAction extends COLTRemoteAction {
         }.queue();
     }
 
-    protected abstract COLTCompilationResult doRunCompilation() throws COLTRemoteTransferableException;
+    protected abstract COLTCompilationResult doRunCompilation(AnActionEvent event) throws COLTRemoteTransferableException;
 
 }
