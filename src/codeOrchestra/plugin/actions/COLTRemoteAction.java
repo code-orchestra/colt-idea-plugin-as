@@ -22,10 +22,12 @@ public abstract class COLTRemoteAction extends AnAction {
 
     protected COLTRemoteAction(@Nullable String text) {
         super(text);
+        this.text = text;
     }
 
     protected COLTRemoteService coltRemoteService;
     protected Project ideaProject;
+    protected String text;
 
     @Override
     public final void actionPerformed(AnActionEvent event) {

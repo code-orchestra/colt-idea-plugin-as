@@ -4,6 +4,7 @@ import codeOrchestra.lcs.rpc.model.COLTCompilationResult;
 import codeOrchestra.lcs.rpc.model.COLTRemoteProject;
 import codeOrchestra.lcs.rpc.model.COLTState;
 import codeOrchestra.lcs.rpc.COLTRemoteTransferableException;
+import codeOrchestra.lcs.rpc.security.InvalidAuthTokenException;
 import codeOrchestra.lcs.rpc.security.InvalidShortCodeException;
 import codeOrchestra.lcs.rpc.security.TooManyFailedCodeTypeAttemptsException;
 
@@ -17,6 +18,8 @@ public interface COLTRemoteService {
     void requestShortCode(String requestor) throws COLTRemoteTransferableException;
 
     String obtainAuthToken(String shortCode) throws TooManyFailedCodeTypeAttemptsException, InvalidShortCodeException;
+
+    void checkAuth(String securityToken) throws InvalidAuthTokenException;
 
     // Secured methods
 

@@ -1,20 +1,21 @@
 package codeOrchestra.plugin.actions;
 
-import codeOrchestra.lcs.rpc.security.InvalidAuthTokenException;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import codeOrchestra.lcs.rpc.COLTRemoteTransferableException;
+import codeOrchestra.lcs.rpc.model.COLTCompilationResult;
+import codeOrchestra.plugin.COLTSettings;
 
 /**
  * @author Alexander Eliseyev
  */
-public class COLTProductionCompileAction extends COLTRemoteAction {
+public class COLTProductionCompileAction extends COLTAbstractCompileAction {
 
     public COLTProductionCompileAction() {
-        super("Run Production Compilation");
+        super("Production Build");
     }
 
     @Override
-    protected void doRemoteAction(AnActionEvent e) throws InvalidAuthTokenException {
-        // TODO: implement
+    protected COLTCompilationResult doRunCompilation() throws COLTRemoteTransferableException {
+        return coltRemoteService.runProductionCompilation(COLTSettings.getInstance().getSecurityToken(), true);
     }
 
 }

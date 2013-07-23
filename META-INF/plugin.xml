@@ -1,6 +1,6 @@
 <idea-plugin version="2">
 
-    <id>com.codeOrchestra.plugin.colt</id>
+  <id>com.codeOrchestra.plugin.colt</id>
   <name>COLT Plugin</name>
   <version>1.0</version>
   <vendor email="support@codeorchestra.com" url="http://codeorchestra.com/">CodeOrchestra</vendor>
@@ -18,7 +18,7 @@
   </application-components>
 
   <project-components>
-    <!-- Add your ideaProject components here -->
+    <component><implementation-class>codeOrchestra.plugin.view.COLTConsole</implementation-class></component>
   </project-components>
 
   <actions>
@@ -26,8 +26,8 @@
           <add-to-group group-id="MainMenu" anchor="last"  />
           <action id="colt.launch" class="codeOrchestra.plugin.actions.COLTLaunchAction" text="Launch COLT" description="Launch COLT" />
           <action id="colt.export" class="codeOrchestra.plugin.actions.COLTExportAction" text="Export COLT Project" description="Save COLT project file" />
-          <action id="colt.compile.live" class="codeOrchestra.plugin.actions.COLTLiveBaseCompileAction" text="Run Base Live Compilation" description="Run Base Live Compilation" />
-          <action id="colt.compile.production" class="codeOrchestra.plugin.actions.COLTProductionCompileAction" text="Run Production Compilation" description="Run Production Compilation" />
+          <action id="colt.compile.live" class="codeOrchestra.plugin.actions.COLTLiveBaseCompileAction" text="Live Build" description="Run Base Live Compilation" />
+          <action id="colt.compile.production" class="codeOrchestra.plugin.actions.COLTProductionCompileAction" text="Production Build" description="Run Production Compilation" />
       </group>
   </actions>
 

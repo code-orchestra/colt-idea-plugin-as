@@ -10,6 +10,7 @@ public class COLTCompilerMessage {
   private int columnNumber;
   private String type;
   private String content;
+  private String fullMessage;
 
   public COLTCompilerMessage() {    
   }
@@ -53,7 +54,13 @@ public class COLTCompilerMessage {
   public void setContent(String content) {
     this.content = content;
   }
-  
-  
-  
+
+  public String getFullMessage() {
+    return fullMessage;
+  }
+
+  public void setFullMessage(String fullMessage) {
+    this.fullMessage = fullMessage;
+  }
+
 }
