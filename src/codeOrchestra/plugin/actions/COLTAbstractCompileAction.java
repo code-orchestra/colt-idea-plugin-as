@@ -38,7 +38,7 @@ public abstract class ColtAbstractCompileAction extends AsColeRemoteAction {
                     ColtCompilationResult coltCompilationResult = doRunCompilation(event);
 
                     final IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
-                    StatusBarEx statusBar = (StatusBarEx)ideFrame.getStatusBar();
+                    StatusBarEx statusBar = (StatusBarEx) ideFrame.getStatusBar();
 
                     if (coltCompilationResult.isSuccessful()) {
                         statusBar.notifyProgressByBalloon(MessageType.INFO, text + " is successful");

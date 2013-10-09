@@ -51,7 +51,7 @@ public abstract class GenericColtRemoteAction extends AnAction {
 
         // Authorize if haven't done it yet
         if (!ColtRemoteServiceProvider.get().authorize()) {
-            int result = Messages.showDialog("This plugin needs an authorization from the Colt application.", COLT_TITLE, new String[] {
+            int result = Messages.showDialog("This plugin needs an authorization from the Colt application.", COLT_TITLE, new String[]{
                     "Try again", "Cancel"
             }, 0, Messages.getWarningIcon());
 

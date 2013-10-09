@@ -1,9 +1,7 @@
 package codeOrchestra.plugin.actions;
 
 import codeOrchestra.colt.as.rpc.model.ColtRemoteProject;
-import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
 import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
-import codeOrchestra.plugin.ColtSettings;
 import com.intellij.lang.javascript.flex.FlexUtils;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfiguration;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfigurationManager;
