@@ -1,11 +1,11 @@
-package codeOrchestra.lcs.rpc.model;
+package codeOrchestra.colt.core.rpc.model;
 
 import java.util.Map;
 
 /**
  * @author Alexander Eliseyev
  */
-public class COLTConnection {
+public class ColtConnection {
 
     private long startTimestamp;
 
@@ -15,7 +15,7 @@ public class COLTConnection {
 
     private int connectionNumber;
 
-    public COLTConnection() {
+    public ColtConnection() {
     }
 
     public long getStartTimestamp() {
@@ -58,14 +58,4 @@ public class COLTConnection {
         this.connectionNumber = connectionNumber;
     }
 
-    @Override
-    public String toString() {
-        return "COLTConnection{" +
-                "startTimestamp=" + startTimestamp +
-                ", broadcastId='" + broadcastId + '\'' +
-                ", clientId='" + clientId + '\'' +
-                ", clientInfo=" + clientInfo +
-                ", connectionNumber=" + connectionNumber +
-                '}';
-    }
 }

@@ -1,11 +1,11 @@
 package codeOrchestra.plugin.rpc;
 
-import codeOrchestra.lcs.rpc.COLTRemoteService;
-import codeOrchestra.lcs.rpc.COLTRemoteTransferableException;
-import codeOrchestra.lcs.rpc.security.InvalidShortCodeException;
-import codeOrchestra.lcs.rpc.security.TooManyFailedCodeTypeAttemptsException;
-import codeOrchestra.plugin.COLTSettings;
-import codeOrchestra.plugin.actions.COLTRemoteAction;
+import codeOrchestra.colt.core.rpc.ColtRemoteService;
+import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
+import codeOrchestra.colt.core.rpc.security.InvalidShortCodeException;
+import codeOrchestra.colt.core.rpc.security.TooManyFailedCodeTypeAttemptsException;
+import codeOrchestra.plugin.ColtSettings;
+import codeOrchestra.plugin.actions.GenericColtRemoteAction;
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import com.googlecode.jsonrpc4j.ProxyUtil;
 import com.intellij.openapi.ui.Messages;
@@ -17,28 +17,29 @@ import java.net.URL;
 /**
  * @author Alexander Eliseyev
  */
-public final class COLTRemoteServiceProvider {
+public final class ColtRemoteServiceProvider {
 
-    private static final COLTRemoteServiceProvider instance = new COLTRemoteServiceProvider();
+    private static final ColtRemoteServiceProvider instance = new ColtRemoteServiceProvider();
 
     private static final String SERVICE_URL = "http://localhost:8092/rpc/coltService";
+
     private static final int MAX_ATTEMPT_COUNT = 5;
 
-    public static COLTRemoteServiceProvider get() {
+    public static ColtRemoteServiceProvider get() {
         return instance;
     }
 
-    private COLTRemoteService coltRemoteService;
+    private ColtRemoteService coltRemoteService;
 
-    private COLTRemoteServiceProvider() {
+    private ColtRemoteServiceProvider() {
     }
 
-    public synchronized COLTRemoteService getService() throws COLTRemoteServiceUnavailableException {
+    public synchronized ColtRemoteService getService() throws ColtRemoteServiceUnavailableException {
         return getService(0);
     }
 
     public boolean authorize() {
-        COLTSettings coltSettings = COLTSettings.getInstance();
+        ColtSettings coltSettings = ColtSettings.getInstance();
 
         if (coltSettings.isEmpty()) {
             return makeNewSecurityToken(true);
@@ -50,23 +51,23 @@ public final class COLTRemoteServiceProvider {
     private boolean makeNewSecurityToken(boolean newRequest) {
         if (newRequest) {
             try {
-                coltRemoteService.requestShortCode("COLT IntelliJ IDEA Plugin");
-            } catch (COLTRemoteTransferableException e) {
-                Messages.showErrorDialog("Can't request an authorization key from COLT.\nMake sure COLT is active and running", COLTRemoteAction.COLT_TITLE);
+                coltRemoteService.requestShortCode("Colt IntelliJ IDEA Plugin");
+            } catch (ColtRemoteTransferableException e) {
+                Messages.showErrorDialog("Can't request an authorization key from Colt.\nMake sure Colt is active and running", GenericColtRemoteAction.COLT_TITLE);
                 return false;
             }
         }
 
-        String shortCode = Messages.showInputDialog("Enter the short key displayed in COLT", COLTRemoteAction.COLT_TITLE, Messages.getQuestionIcon());
+        String shortCode = Messages.showInputDialog("Enter the short key displayed in Colt", GenericColtRemoteAction.COLT_TITLE, Messages.getQuestionIcon());
         if (StringUtils.isNotEmpty(shortCode)) {
             String token;
             try {
                 token = coltRemoteService.obtainAuthToken(shortCode);
             } catch (TooManyFailedCodeTypeAttemptsException e) {
-                Messages.showErrorDialog("Too many failed code input attempts, try again later", COLTRemoteAction.COLT_TITLE);
+                Messages.showErrorDialog("Too many failed code input attempts, try again later", GenericColtRemoteAction.COLT_TITLE);
                 return false;
             } catch (InvalidShortCodeException e) {
-                int result = Messages.showDialog("Invalid short code entered", COLTRemoteAction.COLT_TITLE, new String[] {
+                int result = Messages.showDialog("Invalid short code entered", GenericColtRemoteAction.COLT_TITLE, new String[] {
                         "Try again", "Cancel"
                 }, 0, Messages.getWarningIcon());
 
@@ -77,12 +78,12 @@ public final class COLTRemoteServiceProvider {
                 return false;
             }
 
-            COLTSettings.getInstance().setSecurityToken(token);
-            Messages.showInfoMessage("Successfully connected to COLT", COLTRemoteAction.COLT_TITLE);
+            ColtSettings.getInstance().setSecurityToken(token);
+            Messages.showInfoMessage("Successfully connected to Colt", GenericColtRemoteAction.COLT_TITLE);
 
             return true;
         } else {
-            int result = Messages.showDialog("Empty short code entered", COLTRemoteAction.COLT_TITLE, new String[] {
+            int result = Messages.showDialog("Empty short code entered", GenericColtRemoteAction.COLT_TITLE, new String[] {
                     "Try again", "Cancel"
             }, 0, Messages.getWarningIcon());
 
@@ -94,9 +95,9 @@ public final class COLTRemoteServiceProvider {
         return false;
     }
 
-    private COLTRemoteService getService(int tryCount) throws COLTRemoteServiceUnavailableException {
+    private ColtRemoteService getService(int tryCount) throws ColtRemoteServiceUnavailableException {
         if (tryCount > MAX_ATTEMPT_COUNT) {
-            throw new COLTRemoteServiceUnavailableException();
+            throw new ColtRemoteServiceUnavailableException();
         }
 
         initService();
@@ -118,7 +119,7 @@ public final class COLTRemoteServiceProvider {
         return coltRemoteService;
     }
 
-    private void initService() throws COLTRemoteServiceUnavailableException {
+    private void initService() throws ColtRemoteServiceUnavailableException {
         if (coltRemoteService == null) {
             try {
                 JsonRpcHttpClient client = null;
@@ -127,14 +128,14 @@ public final class COLTRemoteServiceProvider {
                 } catch (MalformedURLException e) {
                     // should not happen
                 }
-                coltRemoteService = ProxyUtil.createClientProxy(getClass().getClassLoader(), COLTRemoteService.class, client);
+                coltRemoteService = ProxyUtil.createClientProxy(getClass().getClassLoader(), ColtRemoteService.class, client);
             } catch (Throwable t) {
-                throw new COLTRemoteServiceUnavailableException(t);
+                throw new ColtRemoteServiceUnavailableException(t);
             }
         }
 
         if (coltRemoteService == null) {
-            throw new COLTRemoteServiceUnavailableException();
+            throw new ColtRemoteServiceUnavailableException();
         }
     }
 

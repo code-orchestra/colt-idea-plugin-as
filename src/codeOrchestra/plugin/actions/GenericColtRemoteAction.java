@@ -1,11 +1,11 @@
 package codeOrchestra.plugin.actions;
 
 
-import codeOrchestra.lcs.rpc.COLTRemoteService;
-import codeOrchestra.lcs.rpc.security.InvalidAuthTokenException;
-import codeOrchestra.plugin.COLTSettings;
-import codeOrchestra.plugin.rpc.COLTRemoteServiceProvider;
-import codeOrchestra.plugin.rpc.COLTRemoteServiceUnavailableException;
+import codeOrchestra.colt.core.rpc.ColtRemoteService;
+import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
+import codeOrchestra.plugin.ColtSettings;
+import codeOrchestra.plugin.rpc.ColtRemoteServiceProvider;
+import codeOrchestra.plugin.rpc.ColtRemoteServiceUnavailableException;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -16,38 +16,42 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Alexander Eliseyev
  */
-public abstract class COLTRemoteAction extends AnAction {
+public abstract class GenericColtRemoteAction extends AnAction {
 
-    public static final String COLT_TITLE = "COLT Connectivity";
+    public static final String COLT_TITLE = "Colt Connectivity";
 
-    protected COLTRemoteAction(@Nullable String text) {
+    protected GenericColtRemoteAction(@Nullable String text) {
         super(text);
         this.text = text;
     }
 
-    protected COLTRemoteService coltRemoteService;
+    private ColtRemoteService coltRemoteService;
     protected Project ideaProject;
     protected String text;
+
+    protected ColtRemoteService getColtRemoteService() {
+        return coltRemoteService;
+    }
 
     @Override
     public final void actionPerformed(AnActionEvent event) {
         // Get the ideaProject
         ideaProject = event.getData(PlatformDataKeys.PROJECT);
         if (ideaProject == null) {
-            throw new IllegalStateException("COLT Remote Action must be aware of the current ideaProject");
+            throw new IllegalStateException("Colt Remote Action must be aware of the current ideaProject");
         }
 
         // Get the service
         try {
-            coltRemoteService = COLTRemoteServiceProvider.get().getService();
-        } catch (COLTRemoteServiceUnavailableException e) {
+            coltRemoteService = ColtRemoteServiceProvider.get().getService();
+        } catch (ColtRemoteServiceUnavailableException e) {
             Messages.showErrorDialog(e.getMessage(), COLT_TITLE);
             return;
         }
 
         // Authorize if haven't done it yet
-        if (!COLTRemoteServiceProvider.get().authorize()) {
-            int result = Messages.showDialog("This plugin needs an authorization from the COLT application.", COLT_TITLE, new String[] {
+        if (!ColtRemoteServiceProvider.get().authorize()) {
+            int result = Messages.showDialog("This plugin needs an authorization from the Colt application.", COLT_TITLE, new String[] {
                     "Try again", "Cancel"
             }, 0, Messages.getWarningIcon());
 
@@ -62,7 +66,7 @@ public abstract class COLTRemoteAction extends AnAction {
         try {
             doRemoteAction(event);
         } catch (InvalidAuthTokenException e) {
-            COLTSettings.getInstance().invalidate();
+            ColtSettings.getInstance().invalidate();
             actionPerformed(event);
         }
     }

@@ -1,6 +1,6 @@
 package codeOrchestra.plugin.view;
 
-import codeOrchestra.plugin.COLTSettings;
+import codeOrchestra.plugin.ColtSettings;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.ConfigurationException;
@@ -19,14 +19,14 @@ import java.io.File;
 /**
  * @author Alexander Eliseyev
  */
-public class COLTConfigurationPage {
+public class ColtConfigurationPage {
 
-    private COLTSettings coltSettings;
+    private ColtSettings coltSettings;
 
     private JPanel mainPanel;
     private TextFieldWithBrowseButton fileChooser;
 
-    public COLTConfigurationPage(COLTSettings coltSettings) {
+    public ColtConfigurationPage(ColtSettings coltSettings) {
         this.coltSettings = coltSettings;
         this.mainPanel = new JPanel();
 
@@ -34,15 +34,15 @@ public class COLTConfigurationPage {
 
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panel1.add(new JLabel("COLT path:"), new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
+        panel1.add(new JLabel("Colt path:"), new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
         mainPanel.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
 
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         fileChooser = new TextFieldWithBrowseButton();
         fileChooser.addBrowseFolderListener(
-                "COLT Installation Path",
-                "Specify the COLT location",
+                "Colt Installation Path",
+                "Specify the Colt location",
                 null,
                 new FileChooserDescriptor(false, true, false, false, false, false),
                 TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT,
@@ -54,26 +54,26 @@ public class COLTConfigurationPage {
         mainPanel.add(new Spacer(), new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
-    private boolean isCOLTPathChanged() {
-        return !ObjectUtils.equals(coltSettings.getCOLTPath(), fileChooser.getText());
+    private boolean isColtPathChanged() {
+        return !ObjectUtils.equals(coltSettings.getColtPath(), fileChooser.getText());
     }
 
     public boolean isModified() {
-        return isCOLTPathChanged();
+        return isColtPathChanged();
     }
 
     public void apply() throws ConfigurationException {
         String coltPath = fileChooser.getText();
 
-        if (!COLTSettings.validateCOLTPath(coltPath)) {
-            throw new ConfigurationException("Invalid COLT location is specified");
+        if (!ColtSettings.validateColtPath(coltPath)) {
+            throw new ConfigurationException("Invalid Colt location is specified");
         }
 
-        coltSettings.setCOLTPath(coltPath);
+        coltSettings.setColtPath(coltPath);
     }
 
     public void reset() {
-        fileChooser.setText(coltSettings.getCOLTPath());
+        fileChooser.setText(coltSettings.getColtPath());
     }
 
     public JPanel getContentPane() {

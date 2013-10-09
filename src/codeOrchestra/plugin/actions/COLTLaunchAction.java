@@ -1,7 +1,7 @@
 package codeOrchestra.plugin.actions;
 
-import codeOrchestra.plugin.launch.COLTLauncher;
-import codeOrchestra.plugin.launch.COLTPathNotConfiguredException;
+import codeOrchestra.plugin.launch.ColtLauncher;
+import codeOrchestra.plugin.launch.ColtPathNotConfiguredException;
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -12,20 +12,20 @@ import java.io.IOException;
 /**
  * @author Alexander Eliseyev
  */
-public class COLTLaunchAction extends AnAction {
+public class ColtLaunchAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent anActionEvent) {
         try {
-            COLTLauncher.launch();
-        } catch (COLTPathNotConfiguredException e) {
-            Messages.showErrorDialog("COLT location not configured.\nTo specify the COLT path, go to Settings -> COLT", COLTRemoteAction.COLT_TITLE);
+            ColtLauncher.launch();
+        } catch (ColtPathNotConfiguredException e) {
+            Messages.showErrorDialog("Colt location not configured.\nTo specify the Colt path, go to Settings -> Colt", GenericColtRemoteAction.COLT_TITLE);
             return;
         } catch (ExecutionException e) {
-            Messages.showErrorDialog("Can't start COLT:\n" + e.getMessage(), COLTRemoteAction.COLT_TITLE);
+            Messages.showErrorDialog("Can't start Colt:\n" + e.getMessage(), GenericColtRemoteAction.COLT_TITLE);
             return;
         } catch (IOException e) {
-            Messages.showErrorDialog("Can't start COLT:\n" + e.getMessage(), COLTRemoteAction.COLT_TITLE);
+            Messages.showErrorDialog("Can't start Colt:\n" + e.getMessage(), GenericColtRemoteAction.COLT_TITLE);
             return;
         }
     }

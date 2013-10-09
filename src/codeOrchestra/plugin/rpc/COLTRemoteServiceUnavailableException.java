@@ -3,23 +3,23 @@ package codeOrchestra.plugin.rpc;
 /**
  * @author Alexander Eliseyev
  */
-public class COLTRemoteServiceUnavailableException extends Exception {
+public class ColtRemoteServiceUnavailableException extends Exception {
 
-    private static final String DEFAULT_MESSAGE = "Can't reach COLT remote service API";
+    private static final String DEFAULT_MESSAGE = "Can't reach Colt remote service API";
 
-    public COLTRemoteServiceUnavailableException() {
+    public ColtRemoteServiceUnavailableException() {
         this(DEFAULT_MESSAGE);
     }
 
-    public COLTRemoteServiceUnavailableException(String s) {
+    public ColtRemoteServiceUnavailableException(String s) {
         super(s);
     }
 
-    public COLTRemoteServiceUnavailableException(String s, Throwable throwable) {
+    public ColtRemoteServiceUnavailableException(String s, Throwable throwable) {
         super(s, throwable);
     }
 
-    public COLTRemoteServiceUnavailableException(Throwable throwable) {
+    public ColtRemoteServiceUnavailableException(Throwable throwable) {
         this(DEFAULT_MESSAGE, throwable);
     }
 }

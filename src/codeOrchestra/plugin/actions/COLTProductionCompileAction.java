@@ -1,22 +1,22 @@
 package codeOrchestra.plugin.actions;
 
-import codeOrchestra.lcs.rpc.COLTRemoteTransferableException;
-import codeOrchestra.lcs.rpc.model.COLTCompilationResult;
-import codeOrchestra.plugin.COLTSettings;
+import codeOrchestra.colt.as.rpc.model.ColtCompilationResult;
+import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
+import codeOrchestra.plugin.ColtSettings;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 
 /**
  * @author Alexander Eliseyev
  */
-public class COLTProductionCompileAction extends COLTAbstractCompileAction {
+public class ColtProductionCompileAction extends ColtAbstractCompileAction {
 
-    public COLTProductionCompileAction() {
+    public ColtProductionCompileAction() {
         super("Production Build");
     }
 
     @Override
-    protected COLTCompilationResult doRunCompilation(AnActionEvent event) throws COLTRemoteTransferableException {
-        return coltRemoteService.runProductionCompilation(COLTSettings.getInstance().getSecurityToken(), true);
+    protected ColtCompilationResult doRunCompilation(AnActionEvent event) throws ColtRemoteTransferableException {
+        return getColtRemoteService().runProductionCompilation(ColtSettings.getInstance().getSecurityToken(), true);
     }
 
 }

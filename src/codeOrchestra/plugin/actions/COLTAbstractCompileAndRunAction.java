@@ -1,7 +1,7 @@
 package codeOrchestra.plugin.actions;
 
-import codeOrchestra.lcs.rpc.COLTRemoteTransferableException;
-import codeOrchestra.lcs.rpc.model.COLTCompilationResult;
+import codeOrchestra.colt.as.rpc.model.ColtCompilationResult;
+import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
 import codeOrchestra.utils.EventUtils;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -9,20 +9,18 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-
 /**
  * @author Alexander Eliseyev
  */
-public abstract class COLTAbstractCompileAndRunAction extends COLTAbstractCompileAction {
+public abstract class ColtAbstractCompileAndRunAction extends ColtAbstractCompileAction {
 
-    public COLTAbstractCompileAndRunAction(@Nullable String text) {
+    public ColtAbstractCompileAndRunAction(@Nullable String text) {
         super(text);
     }
 
     @Override
-    protected final COLTCompilationResult doRunCompilation(final AnActionEvent event) throws COLTRemoteTransferableException {
-        COLTCompilationResult coltCompilationResult = doRunCompilationWithoutRun();
+    protected final ColtCompilationResult doRunCompilation(final AnActionEvent event) throws ColtRemoteTransferableException {
+        ColtCompilationResult coltCompilationResult = doRunCompilationWithoutRun();
 
         if (coltCompilationResult.isSuccessful()) {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -47,6 +45,6 @@ public abstract class COLTAbstractCompileAndRunAction extends COLTAbstractCompil
         return coltCompilationResult;
     }
 
-    protected abstract COLTCompilationResult doRunCompilationWithoutRun() throws COLTRemoteTransferableException;
+    protected abstract ColtCompilationResult doRunCompilationWithoutRun() throws ColtRemoteTransferableException;
 
 }

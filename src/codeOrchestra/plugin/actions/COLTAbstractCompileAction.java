@@ -1,11 +1,11 @@
 package codeOrchestra.plugin.actions;
 
-import codeOrchestra.lcs.rpc.COLTRemoteTransferableException;
-import codeOrchestra.lcs.rpc.model.COLTCompilationResult;
-import codeOrchestra.lcs.rpc.model.COLTCompilerMessage;
-import codeOrchestra.lcs.rpc.security.InvalidAuthTokenException;
-import codeOrchestra.plugin.COLTSettings;
-import codeOrchestra.plugin.view.COLTConsole;
+import codeOrchestra.colt.as.rpc.model.ColtCompilationResult;
+import codeOrchestra.colt.as.rpc.model.ColtCompilerMessage;
+import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
+import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
+import codeOrchestra.plugin.ColtSettings;
+import codeOrchestra.plugin.view.ColtConsole;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -20,22 +20,22 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Alexander Eliseyev
  */
-public abstract class COLTAbstractCompileAction extends COLTRemoteAction {
+public abstract class ColtAbstractCompileAction extends AsColeRemoteAction {
 
-    protected COLTAbstractCompileAction(@Nullable String text) {
+    protected ColtAbstractCompileAction(@Nullable String text) {
         super(text);
     }
 
     @Override
     protected final void doRemoteAction(final AnActionEvent event) throws InvalidAuthTokenException {
-        coltRemoteService.checkAuth(COLTSettings.getInstance().getSecurityToken());
+        getColtRemoteService().checkAuth(ColtSettings.getInstance().getSecurityToken());
 
         new Task.Backgroundable(ideaProject, "Live Build", false) {
             @Override
             public void run(@NotNull ProgressIndicator progressIndicator) {
                 try {
-                    COLTConsole.getInstance(ideaProject).clear();
-                    COLTCompilationResult coltCompilationResult = doRunCompilation(event);
+                    ColtConsole.getInstance(ideaProject).clear();
+                    ColtCompilationResult coltCompilationResult = doRunCompilation(event);
 
                     final IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
                     StatusBarEx statusBar = (StatusBarEx)ideFrame.getStatusBar();
@@ -47,13 +47,13 @@ public abstract class COLTAbstractCompileAction extends COLTRemoteAction {
                     }
 
                     // Report errors and warnings
-                    for (COLTCompilerMessage coltCompilerMessage : coltCompilationResult.getErrorMessages()) {
-                        COLTConsole.getInstance(ideaProject).append(coltCompilerMessage.getFullMessage(), ConsoleViewContentType.ERROR_OUTPUT);
+                    for (ColtCompilerMessage coltCompilerMessage : coltCompilationResult.getErrorMessages()) {
+                        ColtConsole.getInstance(ideaProject).append(coltCompilerMessage.getFullMessage(), ConsoleViewContentType.ERROR_OUTPUT);
                     }
-                    for (COLTCompilerMessage coltCompilerMessage : coltCompilationResult.getWarningMessages()) {
-                        COLTConsole.getInstance(ideaProject).append(coltCompilerMessage.getFullMessage(), ConsoleViewContentType.NORMAL_OUTPUT);
+                    for (ColtCompilerMessage coltCompilerMessage : coltCompilationResult.getWarningMessages()) {
+                        ColtConsole.getInstance(ideaProject).append(coltCompilerMessage.getFullMessage(), ConsoleViewContentType.NORMAL_OUTPUT);
                     }
-                } catch (COLTRemoteTransferableException e) {
+                } catch (ColtRemoteTransferableException e) {
                     // TODO: handle nicely
                     e.printStackTrace();
                 }
@@ -61,6 +61,6 @@ public abstract class COLTAbstractCompileAction extends COLTRemoteAction {
         }.queue();
     }
 
-    protected abstract COLTCompilationResult doRunCompilation(AnActionEvent event) throws COLTRemoteTransferableException;
+    protected abstract ColtCompilationResult doRunCompilation(AnActionEvent event) throws ColtRemoteTransferableException;
 
 }

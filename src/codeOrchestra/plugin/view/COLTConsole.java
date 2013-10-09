@@ -19,18 +19,18 @@ import javax.swing.*;
 /**
  * @author Alexander Eliseyev
  */
-public class COLTConsole extends AbstractProjectComponent implements ProjectComponent {
+public class ColtConsole extends AbstractProjectComponent implements ProjectComponent {
 
-    public static final String TOOL_WINDOW_NAME = "COLT";
+    public static final String TOOL_WINDOW_NAME = "Colt";
 
-    public static COLTConsole getInstance(Project project) {
-        return project.getComponent(COLTConsole.class);
+    public static ColtConsole getInstance(Project project) {
+        return project.getComponent(ColtConsole.class);
     }
 
     private ToolWindow toolWindow;
     private ConsoleView consoleView;
 
-    public COLTConsole(Project project) {
+    public ColtConsole(Project project) {
         super(project);
     }
 

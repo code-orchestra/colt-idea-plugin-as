@@ -1,9 +1,9 @@
 package codeOrchestra.plugin.actions;
 
-import codeOrchestra.lcs.rpc.COLTRemoteTransferableException;
-import codeOrchestra.lcs.rpc.model.COLTRemoteProject;
-import codeOrchestra.lcs.rpc.security.InvalidAuthTokenException;
-import codeOrchestra.plugin.COLTSettings;
+import codeOrchestra.colt.as.rpc.model.ColtRemoteProject;
+import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
+import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
+import codeOrchestra.plugin.ColtSettings;
 import com.intellij.lang.javascript.flex.FlexUtils;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfiguration;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfigurationManager;
@@ -22,17 +22,17 @@ import java.util.List;
  * @author Dima Kruk
  * @author Alexander Eliseyev
  */
-public class COLTExportAction extends COLTRemoteAction {
+public class ColtExportAction extends GenericColtRemoteAction {
 
-    public COLTExportAction() {
-        super("Export COLT Project");
+    public ColtExportAction() {
+        super("Export Colt Project");
     }
 
     @Override
     protected void doRemoteAction(AnActionEvent e) throws InvalidAuthTokenException {
         Module[] allModules = ModuleManager.getInstance(ideaProject).getModules();
         if (allModules.length == 0) {
-            Messages.showErrorDialog("No modules in the ideaProject", COLTRemoteAction.COLT_TITLE);
+            Messages.showErrorDialog("No modules in the ideaProject", GenericColtRemoteAction.COLT_TITLE);
             return;
         }
 
@@ -46,9 +46,9 @@ public class COLTExportAction extends COLTRemoteAction {
                 values[i] = allModules[i].getName();
             }
 
-            int result = Messages.showChooseDialog("Choose the Main module", COLTRemoteAction.COLT_TITLE, values, values[0], null);
+            int result = Messages.showChooseDialog("Choose the Main module", GenericColtRemoteAction.COLT_TITLE, values, values[0], null);
             if (result == -1) {
-                Messages.showErrorDialog("No Main module was selected", COLTRemoteAction.COLT_TITLE);
+                Messages.showErrorDialog("No Main module was selected", GenericColtRemoteAction.COLT_TITLE);
                 return;
             } else {
                 for (int i = 0; i < allModules.length; i++) {
@@ -69,7 +69,7 @@ public class COLTExportAction extends COLTRemoteAction {
             }
         }
 
-        COLTRemoteProject project = new COLTRemoteProject();
+        ColtRemoteProject project = new ColtRemoteProject();
 
         ArrayList<String> libPaths = new ArrayList<String>();
         ArrayList<String> srcPaths = new ArrayList<String>();
@@ -96,7 +96,7 @@ public class COLTExportAction extends COLTRemoteAction {
             }
         }
 
-        // Prepare the COLT shenannigans dir
+        // Prepare the Colt shenannigans dir
         // TODO: need better solution for get path
         String modulePath = mainModuleRootManager.getContentRootUrls()[0].replace("file://", "");
         String workDir = modulePath + "/colt";
@@ -128,14 +128,7 @@ public class COLTExportAction extends COLTRemoteAction {
 
         project.setCompilerOptions(activeBC.getCompilerOptions().getAdditionalOptions());
 
-        try {
-            coltRemoteService.createProject(COLTSettings.getInstance().getSecurityToken(), project);
-        } catch (InvalidAuthTokenException t) {
-            throw t;
-        } catch (COLTRemoteTransferableException e) {
-            // TODO: handle nicely
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        // TODO: save .colt file!!!
     }
 
 }

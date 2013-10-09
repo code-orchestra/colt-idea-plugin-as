@@ -1,6 +1,6 @@
 package codeOrchestra.plugin;
 
-import codeOrchestra.plugin.view.COLTConfigurationPage;
+import codeOrchestra.plugin.view.ColtConfigurationPage;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.*;
@@ -19,25 +19,25 @@ import java.io.File;
  * @author Alexander Eliseyev
  */
 @State(
-    name = "COLTSettings",
+    name = "ColtSettings",
     storages = {
             @Storage(
                 file = StoragePathMacros.APP_CONFIG + "/colt_settings.xml")
     }
 )
-public class COLTSettings implements PersistentStateComponent<COLTSettings.State>, SearchableConfigurable, ApplicationComponent {
+public class ColtSettings implements PersistentStateComponent<ColtSettings.State>, SearchableConfigurable, ApplicationComponent {
 
-    private static COLTSettings instance = null;
+    private static ColtSettings instance = null;
 
-    public static COLTSettings getInstance() {
+    public static ColtSettings getInstance() {
         if (instance == null) {
-            instance = ApplicationManager.getApplication().getComponent(COLTSettings.class);
+            instance = ApplicationManager.getApplication().getComponent(ColtSettings.class);
         }
         return instance;
     }
     private State myState = new State();
 
-    private COLTConfigurationPage configurationPage;
+    private ColtConfigurationPage configurationPage;
 
     @Nullable
     @Override
@@ -61,7 +61,7 @@ public class COLTSettings implements PersistentStateComponent<COLTSettings.State
     @NotNull
     @Override
     public String getId() {
-        return "COLTSettings";
+        return "ColtSettings";
     }
 
     @Nullable
@@ -73,7 +73,7 @@ public class COLTSettings implements PersistentStateComponent<COLTSettings.State
     @Nls
     @Override
     public String getDisplayName() {
-        return "COLT";
+        return "Colt";
     }
 
     @Nullable
@@ -86,7 +86,7 @@ public class COLTSettings implements PersistentStateComponent<COLTSettings.State
     @Override
     public synchronized JComponent createComponent() {
         if (configurationPage == null) {
-            configurationPage = new COLTConfigurationPage(this);
+            configurationPage = new ColtConfigurationPage(this);
         }
         return configurationPage.getContentPane();
     }
@@ -124,18 +124,18 @@ public class COLTSettings implements PersistentStateComponent<COLTSettings.State
     @NotNull
     @Override
     public String getComponentName() {
-        return "COLT Settings";
+        return "Colt Settings";
     }
 
-    public boolean isCOLTPathValid() {
-        return validateCOLTPath(getCOLTPath());
+    public boolean isColtPathValid() {
+        return validateColtPath(getColtPath());
     }
 
-    public String getCOLTPath() {
+    public String getColtPath() {
         return myState.coltPath;
     }
 
-    public void setCOLTPath(String path) {
+    public void setColtPath(String path) {
         myState.coltPath = path;
     }
 
@@ -147,7 +147,7 @@ public class COLTSettings implements PersistentStateComponent<COLTSettings.State
         myState.securityToken = token;
     }
 
-    public static boolean validateCOLTPath(String coltPath) {
+    public static boolean validateColtPath(String coltPath) {
         if (StringUtils.isEmpty(coltPath)) {
             return false;
         }

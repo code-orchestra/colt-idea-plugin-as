@@ -3,8 +3,8 @@ package codeOrchestra.plugin.launch;
 /**
  * @author Alexander Eliseyev
  */
-public class COLTPathNotConfiguredException extends Exception {
+public class ColtPathNotConfiguredException extends Exception {
 
-    public COLTPathNotConfiguredException() {
+    public ColtPathNotConfiguredException() {
     }
 }
