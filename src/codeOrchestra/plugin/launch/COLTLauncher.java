@@ -18,49 +18,42 @@ public final class ColtLauncher {
             throw new ColtPathNotConfiguredException();
         }
 
-        String coltExecutablePath = completeColtPath(completeColtPath(ColtSettings.getInstance().getColtPath()));
-        return new ProcessBuilder(coltExecutablePath).start();
-    }
+        File coltBaseDir = new File(ColtSettings.getInstance().getColtPath());
 
-    private static String completeColtPath(String coltPath) throws ExecutionException {
-        File coltFile = new File(coltPath);
-        if (!coltFile.exists()) {
-            throw new ExecutionException("Can't locate Colt under " + coltPath);
-        }
-
-        String result = coltPath;
-        if (SystemInfo.isMac) {
-            if (coltFile.isDirectory()) {
-                File executableDir = new File(coltFile, "Colt.app/Contents/MacOS");
-                if (!(executableDir.exists())) {
-                    throw new ExecutionException("Can't locate Colt under " + coltPath);
-                }
-
-                File[] files = executableDir.listFiles(new FilenameFilter() {
-                    public boolean accept(File file, String fileName) {
-                        return fileName.toLowerCase().contains("eclipse");
-                    }
-                });
-                if (files == null || files.length == 0) {
-                    throw new ExecutionException("Can't locate Colt under " + coltPath);
-                }
-
-                result = files[0].getPath();
-            }
+        if (SystemInfo.isMac && coltBaseDir.getPath().endsWith(".app")) {
+            return Runtime.getRuntime().exec("open -n -a " + coltBaseDir.getPath());
         } else if (SystemInfo.isWindows) {
-            result = result + "\\" + "Colt.exe";
-        } else {
-            // Do nothing 
-        }
+            File executable = getApplicationExecutable(coltBaseDir);
+            if (executable != null && executable.exists()) {
+                return startExecutable(executable.getPath());
+            }
 
-        return protect(result);
+            throw new IllegalStateException("Can't locate the COLT executable");
+        } else {
+            throw new IllegalStateException("Unsupported OS: " + System.getProperty("os.name"));
+        }
     }
 
-    public static String protect(String result) {
-        if (result.contains(" ")) {
-            return "\"" + result + "\"";
+    private static Process startExecutable(String executable, String... args) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(executable);
+
+        if (args.length > 0) {
+            builder = builder.command(args);
         }
-        return result;
+
+        return builder.start();
+    }
+
+    public static File getApplicationExecutable(File coltBaseDir) {
+        if (SystemInfo.isMac) {
+            File executable = new File(coltBaseDir, "Contents/MacOs/JavaAppLauncher");
+            return executable.exists() ? executable : null;
+        } else if (SystemInfo.isWindows) {
+            File executable = new File(coltBaseDir, "colt.exe");
+            return executable.exists() ? executable : null;
+        }
+
+        throw new IllegalStateException("Unsupported OS: " + System.getProperty("os.name"));
     }
 
 }

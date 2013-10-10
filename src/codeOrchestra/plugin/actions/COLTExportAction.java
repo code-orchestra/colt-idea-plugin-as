@@ -2,7 +2,6 @@ package codeOrchestra.plugin.actions;
 
 import codeOrchestra.colt.as.rpc.model.ColtRemoteProject;
 import codeOrchestra.colt.as.rpc.model.codec.ColtRemoteProjectEncoder;
-import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
 import codeOrchestra.colt.core.workset.Workset;
 import codeOrchestra.utils.XMLUtils;
 import com.intellij.lang.javascript.flex.FlexUtils;
@@ -19,7 +18,6 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 
 import javax.xml.transform.TransformerException;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +67,9 @@ public class ColtExportAction extends AnAction {
         ColtRemoteProject project = saveConfiguration(modulesPairs);
         Workset.addProjectPath(project.getPath(), true);
 
-        // TODO: launch COLT and connect
+        ColtLaunchAction.launch();
+
+        // TODO: connect to colt
     }
 
     private ColtRemoteProject saveConfiguration(List<Pair<Module, Boolean>> modules) {
