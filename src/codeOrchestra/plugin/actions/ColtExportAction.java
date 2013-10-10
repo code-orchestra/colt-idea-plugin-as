@@ -7,9 +7,12 @@ import codeOrchestra.utils.XMLUtils;
 import com.intellij.lang.javascript.flex.FlexUtils;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfiguration;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfigurationManager;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
@@ -23,14 +26,18 @@ import java.util.List;
  * @author Dima Kruk
  * @author Alexander Eliseyev
  */
-public class ColtExportAction extends GenericColtRemoteAction {
+public class ColtExportAction extends AnAction {
+
+    private Project ideaProject;
 
     public ColtExportAction() {
         super("Export Colt Project");
     }
 
     @Override
-    protected void doRemoteAction(AnActionEvent e) throws InvalidAuthTokenException {
+    public void actionPerformed(AnActionEvent e) {
+        ideaProject = e.getData(PlatformDataKeys.PROJECT);
+
         Module[] allModules = ModuleManager.getInstance(ideaProject).getModules();
         if (allModules.length == 0) {
             Messages.showErrorDialog("No modules in the ideaProject", GenericColtRemoteAction.COLT_TITLE);
@@ -59,9 +66,11 @@ public class ColtExportAction extends GenericColtRemoteAction {
         }
 
         saveConfiguration(modulesPairs);
+
+        // TODO: launch COLT and connect
     }
 
-    private void saveConfiguration(List<Pair<Module, Boolean>> modules) throws InvalidAuthTokenException {
+    private void saveConfiguration(List<Pair<Module, Boolean>> modules) {
         Module mainModule = null;
         for (Pair<Module, Boolean> modulePair : modules) {
             if (modulePair.getSecond()) {
@@ -134,8 +143,6 @@ public class ColtExportAction extends GenericColtRemoteAction {
             // TODO: handle nicely
             e.printStackTrace();
         }
-
-        // TODO: launch COLT and connect
     }
 
 }

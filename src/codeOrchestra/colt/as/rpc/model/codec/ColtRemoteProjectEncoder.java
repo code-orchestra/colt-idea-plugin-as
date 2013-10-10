@@ -78,6 +78,13 @@ public class ColtRemoteProjectEncoder {
                 createElement("optimize", "false", productionElement);
             }
             buildElement.appendChild(productionElement);
+
+            // Run target
+            Element runTargetElement = createElement("run-target");
+            {
+                createElement("run-target", "SWF", runTargetElement);
+            }
+            buildElement.appendChild(runTargetElement);
         }
         rootElement.appendChild(buildElement);
 
@@ -103,10 +110,10 @@ public class ColtRemoteProjectEncoder {
             // Live
             Element innerLiveElement = createElement("live");
             {
-                createElement("live-type", "annotated", launchElement);
-                createElement("paused", "false", launchElement);
-                createElement("make-gs-live", "false", launchElement);
-                createElement("max-loop", "10000", launchElement);
+                createElement("live-type", "annotated", innerLiveElement);
+                createElement("paused", "false", innerLiveElement);
+                createElement("make-gs-live", "false", innerLiveElement);
+                createElement("max-loop", "10000", innerLiveElement);
             }
             liveElement.appendChild(innerLiveElement);
         }
@@ -143,6 +150,10 @@ public class ColtRemoteProjectEncoder {
     }
 
     private String createFileSetFromPathArray(String[] paths) {
+        if (paths == null || paths.length == 0) {
+            return "";
+        }
+
         File baseDir = new File(project.getPath()).getParentFile();
 
         StringBuilder sb = new StringBuilder();
