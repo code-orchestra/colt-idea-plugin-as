@@ -1,7 +1,9 @@
 package codeOrchestra.plugin.actions;
 
 import codeOrchestra.colt.as.rpc.model.ColtRemoteProject;
+import codeOrchestra.colt.as.rpc.model.codec.ColtRemoteProjectEncoder;
 import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
+import codeOrchestra.utils.XMLUtils;
 import com.intellij.lang.javascript.flex.FlexUtils;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfiguration;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfigurationManager;
@@ -12,6 +14,7 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 
+import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,8 +100,7 @@ public class ColtExportAction extends GenericColtRemoteAction {
         // Prepare the Colt shenannigans dir
         // TODO: need better solution for get path
         String modulePath = mainModuleRootManager.getContentRootUrls()[0].replace("file://", "");
-        String workDir = modulePath + "/colt";
-        (new File(workDir)).mkdir();
+        String workDir = ideaProject.getBasePath();
 
         String projectName = ideaProject.getName();
 
@@ -126,7 +128,14 @@ public class ColtExportAction extends GenericColtRemoteAction {
 
         project.setCompilerOptions(activeBC.getCompilerOptions().getAdditionalOptions());
 
-        // TODO: save .colt file!!!
+        try {
+            XMLUtils.saveToFile(project.getPath(), new ColtRemoteProjectEncoder(project).toDocument());
+        } catch (TransformerException e) {
+            // TODO: handle nicely
+            e.printStackTrace();
+        }
+
+        // TODO: launch COLT and connect
     }
 
 }
