@@ -51,14 +51,14 @@ public final class ColtRemoteServiceProvider {
     private boolean makeNewSecurityToken(boolean newRequest) {
         if (newRequest) {
             try {
-                coltRemoteService.requestShortCode("Colt IntelliJ IDEA Plugin");
+                coltRemoteService.requestShortCode("COLT IntelliJ IDEA Plugin");
             } catch (ColtRemoteTransferableException e) {
-                Messages.showErrorDialog("Can't request an authorization key from Colt.\nMake sure Colt is active and running", GenericColtRemoteAction.COLT_TITLE);
+                Messages.showErrorDialog("Can't request an authorization key from COLT.\nMake sure COLT is active and running", GenericColtRemoteAction.COLT_TITLE);
                 return false;
             }
         }
 
-        String shortCode = Messages.showInputDialog("Enter the short key displayed in Colt", GenericColtRemoteAction.COLT_TITLE, Messages.getQuestionIcon());
+        String shortCode = Messages.showInputDialog("Enter the short key displayed in COLT", GenericColtRemoteAction.COLT_TITLE, Messages.getQuestionIcon());
         if (StringUtils.isNotEmpty(shortCode)) {
             String token;
             try {
@@ -79,7 +79,7 @@ public final class ColtRemoteServiceProvider {
             }
 
             ColtSettings.getInstance().setSecurityToken(token);
-            Messages.showInfoMessage("Successfully connected to Colt", GenericColtRemoteAction.COLT_TITLE);
+            Messages.showInfoMessage("Successfully connected to COLT", GenericColtRemoteAction.COLT_TITLE);
 
             return true;
         } else {
