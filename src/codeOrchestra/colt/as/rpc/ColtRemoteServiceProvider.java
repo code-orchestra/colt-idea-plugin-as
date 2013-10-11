@@ -1,4 +1,4 @@
-package codeOrchestra.colt.as.plugin.rpc;
+package codeOrchestra.colt.as.rpc;
 
 import codeOrchestra.colt.core.rpc.ColtRemoteService;
 import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;

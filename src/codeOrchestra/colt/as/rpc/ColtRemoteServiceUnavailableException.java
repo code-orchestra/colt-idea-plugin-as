@@ -1,4 +1,4 @@
-package codeOrchestra.colt.as.plugin.rpc;
+package codeOrchestra.colt.as.rpc;
 
 /**
  * @author Alexander Eliseyev
