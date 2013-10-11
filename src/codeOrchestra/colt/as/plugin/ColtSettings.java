@@ -73,7 +73,7 @@ public class ColtSettings implements PersistentStateComponent<ColtSettings.State
     @Nls
     @Override
     public String getDisplayName() {
-        return "Colt";
+        return "COLT";
     }
 
     @Nullable
@@ -124,7 +124,7 @@ public class ColtSettings implements PersistentStateComponent<ColtSettings.State
     @NotNull
     @Override
     public String getComponentName() {
-        return "Colt Settings";
+        return "COLT Settings";
     }
 
     public boolean isColtPathValid() {
