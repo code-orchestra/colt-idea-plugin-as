@@ -1,11 +1,10 @@
-package codeOrchestra.plugin.launch;
+package codeOrchestra.colt.as.plugin.launch;
 
-import codeOrchestra.plugin.ColtSettings;
+import codeOrchestra.colt.as.plugin.ColtSettings;
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.util.SystemInfo;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 /**

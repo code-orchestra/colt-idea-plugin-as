@@ -1,10 +1,8 @@
-package codeOrchestra.plugin.view;
+package codeOrchestra.colt.as.plugin.view;
 
-import codeOrchestra.plugin.ColtSettings;
-import com.intellij.openapi.application.ApplicationManager;
+import codeOrchestra.colt.as.plugin.ColtSettings;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -14,7 +12,6 @@ import org.apache.commons.lang.ObjectUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 
 /**
  * @author Alexander Eliseyev

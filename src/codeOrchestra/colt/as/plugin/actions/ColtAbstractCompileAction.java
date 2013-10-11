@@ -1,11 +1,11 @@
-package codeOrchestra.plugin.actions;
+package codeOrchestra.colt.as.plugin.actions;
 
 import codeOrchestra.colt.as.rpc.model.ColtCompilationResult;
 import codeOrchestra.colt.as.rpc.model.ColtCompilerMessage;
 import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
 import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
-import codeOrchestra.plugin.ColtSettings;
-import codeOrchestra.plugin.view.ColtConsole;
+import codeOrchestra.colt.as.plugin.ColtSettings;
+import codeOrchestra.colt.as.plugin.view.ColtConsole;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.progress.ProgressIndicator;

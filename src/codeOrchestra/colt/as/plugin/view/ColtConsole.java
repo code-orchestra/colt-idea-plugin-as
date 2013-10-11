@@ -1,4 +1,4 @@
-package codeOrchestra.plugin.view;
+package codeOrchestra.colt.as.plugin.view;
 
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.ui.ConsoleView;

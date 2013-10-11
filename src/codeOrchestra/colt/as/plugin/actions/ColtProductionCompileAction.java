@@ -1,8 +1,8 @@
-package codeOrchestra.plugin.actions;
+package codeOrchestra.colt.as.plugin.actions;
 
 import codeOrchestra.colt.as.rpc.model.ColtCompilationResult;
 import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
-import codeOrchestra.plugin.ColtSettings;
+import codeOrchestra.colt.as.plugin.ColtSettings;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 
 /**

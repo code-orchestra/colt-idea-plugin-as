@@ -1,11 +1,11 @@
-package codeOrchestra.plugin.rpc;
+package codeOrchestra.colt.as.plugin.rpc;
 
 import codeOrchestra.colt.core.rpc.ColtRemoteService;
 import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
 import codeOrchestra.colt.core.rpc.security.InvalidShortCodeException;
 import codeOrchestra.colt.core.rpc.security.TooManyFailedCodeTypeAttemptsException;
-import codeOrchestra.plugin.ColtSettings;
-import codeOrchestra.plugin.actions.GenericColtRemoteAction;
+import codeOrchestra.colt.as.plugin.ColtSettings;
+import codeOrchestra.colt.as.plugin.actions.GenericColtRemoteAction;
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import com.googlecode.jsonrpc4j.ProxyUtil;
 import com.intellij.openapi.ui.Messages;

@@ -1,4 +1,4 @@
-package codeOrchestra.plugin.actions;
+package codeOrchestra.colt.as.plugin.actions;
 
 import codeOrchestra.colt.as.rpc.model.ColtRemoteProject;
 import codeOrchestra.colt.as.rpc.model.codec.ColtRemoteProjectEncoder;
