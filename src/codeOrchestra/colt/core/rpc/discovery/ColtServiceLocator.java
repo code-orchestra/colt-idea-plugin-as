@@ -25,6 +25,9 @@ public class ColtServiceLocator extends AbstractProjectComponent implements Proj
 
     private static final String COLT_SERVICE_TYPE = "_colt._tcp.local.";
 
+    public static final int COLT_SERVOCE_LOOKOUT_TIMEOUT = 7000;
+    public static final int SERVICE_AVAILABILITY_CHECK_PERIOD = 300;
+
     private static ColtServiceLocator instance = null;
 
     public static ColtServiceLocator getInstance() {
@@ -76,6 +79,26 @@ public class ColtServiceLocator extends AbstractProjectComponent implements Proj
     @Override
     public void projectClosed() {
         jmDNS.removeServiceListener(COLT_SERVICE_TYPE, serviceListener);
+    }
+
+    public <S extends ColtRemoteService> S waitForService(Class<S> serviceClass, String projectPath, String name) {
+        long timeout = COLT_SERVOCE_LOOKOUT_TIMEOUT;
+        while (timeout > 0) {
+            try {
+                Thread.sleep(SERVICE_AVAILABILITY_CHECK_PERIOD);
+            } catch (InterruptedException e) {
+                // ignore
+            }
+
+            timeout -= SERVICE_AVAILABILITY_CHECK_PERIOD;
+
+            S service = locateService(serviceClass, projectPath, name);
+            if (service != null) {
+                return service;
+            }
+        }
+
+        return null;
     }
 
     public <S extends ColtRemoteService> S locateService(Class<S> serviceClass, String projectPath, String name) {
