@@ -19,7 +19,7 @@
 
   <project-components>
       <component><implementation-class>codeOrchestra.colt.as.plugin.view.ColtConsole</implementation-class></component>
-      <component><implementation-class>codeOrchestra.colt.core.rpc.discovery.ColtServiceLocator</implementation-class></component>
+      <component><implementation-class>codeOrchestra.colt.core.rpc.discovery.FileBasedColtServiceLocator</implementation-class></component>
   </project-components>
 
   <actions>
