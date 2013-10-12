@@ -29,7 +29,7 @@ public class FileBasedColtServiceLocator extends AbstractColtServiceLocator {
         }
 
         File serviceInfoFile = new File(coltProjectStorageDir, "rpc.info");
-        if (serviceInfoFile.exists() || serviceInfoFile.lastModified() < System.currentTimeMillis()) {
+        if (!serviceInfoFile.exists() || (System.currentTimeMillis() - serviceInfoFile.lastModified() > 2000)) {
             return null;
         }
 
