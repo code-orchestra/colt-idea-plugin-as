@@ -3,7 +3,6 @@ package codeOrchestra.colt.core.rpc.discovery;
 import codeOrchestra.colt.core.rpc.ColtRemoteService;
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import com.googlecode.jsonrpc4j.ProxyUtil;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
@@ -25,17 +24,8 @@ public class ColtServiceLocator extends AbstractProjectComponent implements Proj
 
     private static final String COLT_SERVICE_TYPE = "_colt._tcp.local.";
 
-    public static final int COLT_SERVOCE_LOOKOUT_TIMEOUT = 7000;
+    public static final int COLT_SERVICE_LOOKOUT_TIMEOUT = 10000;
     public static final int SERVICE_AVAILABILITY_CHECK_PERIOD = 300;
-
-    private static ColtServiceLocator instance = null;
-
-    public static ColtServiceLocator getInstance() {
-        if (instance == null) {
-            instance = ApplicationManager.getApplication().getComponent(ColtServiceLocator.class);
-        }
-        return instance;
-    }
 
     private JmDNS jmDNS;
 
@@ -55,9 +45,19 @@ public class ColtServiceLocator extends AbstractProjectComponent implements Proj
 
         @Override
         public synchronized void serviceResolved(ServiceEvent event) {
-            ColtServiceDescriptor serviceDescriptor = new ColtServiceDescriptor(event.getInfo());
-            servicesByKey.put(serviceDescriptor.getKey(), serviceDescriptor);
-            servicesKeysByName.put(event.getName(), serviceDescriptor.getKey());
+            ColtServiceDescriptor newServiceDescriptor = new ColtServiceDescriptor(event.getInfo());
+            ColtServiceDescriptor.Key key = newServiceDescriptor.getKey();
+
+            // Take the most recent service descriptor
+            ColtServiceDescriptor existingDescriptor = servicesByKey.get(key);
+            if (existingDescriptor != null) {
+                if (existingDescriptor.getTimestamp() > newServiceDescriptor.getTimestamp()) {
+                    return;
+                }
+            }
+
+            servicesByKey.put(key, newServiceDescriptor);
+            servicesKeysByName.put(event.getName(), key);
         }
     };
 
@@ -82,7 +82,7 @@ public class ColtServiceLocator extends AbstractProjectComponent implements Proj
     }
 
     public <S extends ColtRemoteService> S waitForService(Class<S> serviceClass, String projectPath, String name) {
-        long timeout = COLT_SERVOCE_LOOKOUT_TIMEOUT;
+        long timeout = COLT_SERVICE_LOOKOUT_TIMEOUT;
         while (timeout > 0) {
             try {
                 Thread.sleep(SERVICE_AVAILABILITY_CHECK_PERIOD);

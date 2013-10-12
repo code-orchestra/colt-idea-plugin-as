@@ -1,7 +1,9 @@
 package codeOrchestra.colt.as.plugin.actions;
 
+import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
 import codeOrchestra.colt.as.rpc.model.ColtRemoteProject;
 import codeOrchestra.colt.as.rpc.model.codec.ColtRemoteProjectEncoder;
+import codeOrchestra.colt.core.rpc.discovery.ColtServiceLocator;
 import codeOrchestra.colt.core.workset.Workset;
 import codeOrchestra.utils.XMLUtils;
 import com.intellij.lang.javascript.flex.FlexUtils;
@@ -68,6 +70,11 @@ public class ColtExportAction extends AnAction {
         Workset.addProjectPath(project.getPath(), true);
 
         ColtLaunchAction.launch();
+
+        ColtServiceLocator serviceLocator = ideaProject.getComponent(ColtServiceLocator.class);
+        ColtAsRemoteService coltAsRemoteService = serviceLocator.waitForService(ColtAsRemoteService.class, project.getPath(), project.getName());
+
+        System.out.println(coltAsRemoteService);
 
         // TODO: connect to colt
     }
