@@ -1,5 +1,6 @@
 package codeOrchestra.colt.as.plugin.run;
 
+import codeOrchestra.colt.as.plugin.controller.AsColtPluginController;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
@@ -12,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author Alexander Eliseyev
@@ -25,9 +28,6 @@ public class AsColtConfigurable extends SettingsEditor<AsColtRunConfiguration> {
 
     public AsColtConfigurable(Project project) {
         this.project = project;
-
-        // TODO: module chooser ?
-
         createUIComponents();
     }
 
@@ -38,7 +38,7 @@ public class AsColtConfigurable extends SettingsEditor<AsColtRunConfiguration> {
         JPanel coltProjectPathPane = new JPanel();
         coltProjectPathPane.setLayout(new BorderLayout());
 
-        LabeledComponent coltProjectPathEditor = new LabeledComponent();
+        LabeledComponent<JPanel> coltProjectPathEditor = new LabeledComponent<JPanel>();
         coltProjectPathChooser = new TextFieldWithBrowseButton();
         coltProjectPathChooser.addBrowseFolderListener(
                 "COLT Project Path",
@@ -54,7 +54,17 @@ public class AsColtConfigurable extends SettingsEditor<AsColtRunConfiguration> {
                 false);
 
         coltProjectPathPane.add(coltProjectPathChooser, BorderLayout.CENTER);
-        coltProjectPathPane.add(new JButton("Export"), BorderLayout.AFTER_LINE_ENDS);
+        JButton exportButton = new JButton("Export");
+        exportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                String exportPath = AsColtPluginController.export(project);
+                if (exportPath != null) {
+                    coltProjectPathChooser.setText(exportPath);
+                }
+            }
+        });
+        coltProjectPathPane.add(exportButton, BorderLayout.AFTER_LINE_ENDS);
 
         coltProjectPathEditor.setComponent(coltProjectPathPane);
         coltProjectPathEditor.setText("COLT Project Path");
