@@ -1,6 +1,6 @@
-package codeOrchestra.colt.as.plugin;
+package codeOrchestra.colt.core.plugin;
 
-import codeOrchestra.colt.as.plugin.view.ColtConfigurationPage;
+import codeOrchestra.colt.core.plugin.view.ColtConfigurationPage;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.*;

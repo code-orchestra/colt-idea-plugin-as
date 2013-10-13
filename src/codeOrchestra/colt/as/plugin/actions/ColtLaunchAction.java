@@ -1,7 +1,7 @@
 package codeOrchestra.colt.as.plugin.actions;
 
-import codeOrchestra.colt.as.plugin.launch.ColtLauncher;
-import codeOrchestra.colt.as.plugin.launch.ColtPathNotConfiguredException;
+import codeOrchestra.colt.core.plugin.launch.ColtLauncher;
+import codeOrchestra.colt.core.plugin.launch.ColtPathNotConfiguredException;
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;

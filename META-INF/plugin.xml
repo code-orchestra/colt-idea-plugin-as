@@ -12,11 +12,11 @@
   <idea-version since-build="107.105"/>
 
   <application-components>
-      <component><implementation-class>codeOrchestra.colt.as.plugin.ColtSettings</implementation-class></component>
+      <component><implementation-class>codeOrchestra.colt.core.plugin.ColtSettings</implementation-class></component>
   </application-components>
 
   <project-components>
-      <component><implementation-class>codeOrchestra.colt.as.plugin.view.ColtConsole</implementation-class></component>
+      <component><implementation-class>codeOrchestra.colt.core.plugin.view.ColtConsole</implementation-class></component>
       <component><implementation-class>codeOrchestra.colt.core.rpc.discovery.FileBasedColtServiceLocator</implementation-class></component>
   </project-components>
 

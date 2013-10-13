@@ -1,4 +1,4 @@
-package codeOrchestra.colt.as.plugin.launch;
+package codeOrchestra.colt.core.plugin.launch;
 
 /**
  * @author Alexander Eliseyev

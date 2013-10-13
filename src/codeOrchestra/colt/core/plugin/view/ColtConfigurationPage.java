@@ -1,6 +1,6 @@
-package codeOrchestra.colt.as.plugin.view;
+package codeOrchestra.colt.core.plugin.view;
 
-import codeOrchestra.colt.as.plugin.ColtSettings;
+import codeOrchestra.colt.core.plugin.ColtSettings;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.TextComponentAccessor;

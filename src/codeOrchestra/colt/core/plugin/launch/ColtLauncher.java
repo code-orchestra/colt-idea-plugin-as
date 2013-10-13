@@ -1,6 +1,6 @@
-package codeOrchestra.colt.as.plugin.launch;
+package codeOrchestra.colt.core.plugin.launch;
 
-import codeOrchestra.colt.as.plugin.ColtSettings;
+import codeOrchestra.colt.core.plugin.ColtSettings;
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.util.SystemInfo;
 
