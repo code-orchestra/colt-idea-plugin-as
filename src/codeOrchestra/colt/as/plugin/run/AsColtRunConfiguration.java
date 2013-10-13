@@ -1,10 +1,14 @@
 package codeOrchestra.colt.as.plugin.run;
 
+import codeOrchestra.colt.core.plugin.run.ColtRunProfileState;
 import codeOrchestra.utils.StringUtils;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.application.ApplicationConfigurationType;
-import com.intellij.execution.configurations.*;
+import com.intellij.execution.configurations.ConfigurationFactory;
+import com.intellij.execution.configurations.ModuleBasedConfiguration;
+import com.intellij.execution.configurations.RunConfiguration;
+import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -42,7 +46,9 @@ public class AsColtRunConfiguration extends ModuleBasedConfiguration<AsRunConfig
     @Nullable
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment executionEnvironment) throws ExecutionException {
-        return null; // TODO: implement
+        // TODO: create a connection here!
+
+        return new ColtRunProfileState(getProject());
     }
 
     @Override

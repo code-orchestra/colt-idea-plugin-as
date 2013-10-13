@@ -17,7 +17,7 @@ public abstract class AbstractColtServiceLocator extends AbstractProjectComponen
         super(project);
     }
 
-    protected abstract  <S extends ColtRemoteService> S locateService(Class<S> serviceClass, String projectPath, String name);
+    protected abstract <S extends ColtRemoteService> S locateService(Class<S> serviceClass, String projectPath, String name);
 
     @Override
     public <S extends ColtRemoteService> S waitForService(Class<S> serviceClass, String projectPath, String name) {

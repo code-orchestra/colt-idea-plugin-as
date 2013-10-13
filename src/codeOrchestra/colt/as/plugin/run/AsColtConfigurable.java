@@ -36,8 +36,8 @@ public class AsColtConfigurable extends SettingsEditor<AsColtRunConfiguration> {
         coltProjectPathEditor = new LabeledComponent<TextFieldWithBrowseButton>();
         TextFieldWithBrowseButton coltProjectPathChooser = new TextFieldWithBrowseButton();
         coltProjectPathChooser.addBrowseFolderListener(
-                "Colt Installation Path",
-                "Specify the Colt location",
+                "COLT Project Path",
+                "Specify the COLT project location",
                 null,
                 new FileChooserDescriptor(true, false, false, false, false, false) {
                     @Override
