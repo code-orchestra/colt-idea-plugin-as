@@ -38,8 +38,8 @@ public class ColtConfigurationPage {
         panel2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         fileChooser = new TextFieldWithBrowseButton();
         fileChooser.addBrowseFolderListener(
-                "Colt Installation Path",
-                "Specify the Colt location",
+                "COLT Installation Path",
+                "Specify the COLT location",
                 null,
                 new FileChooserDescriptor(false, true, false, false, false, false),
                 TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT,

@@ -17,7 +17,7 @@ public class AsColtConfigurationFactory extends ConfigurationFactory {
 
     @Override
     public RunConfiguration createTemplateConfiguration(Project project) {
-        return null; // TODO: implement
+        return new AsColtRunConfiguration("", project, AsColtConfigurationFactory.this);
     }
 
     @Override
