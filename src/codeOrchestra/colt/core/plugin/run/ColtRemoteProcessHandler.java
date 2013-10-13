@@ -19,17 +19,22 @@ public class ColtRemoteProcessHandler extends ProcessHandler {
 
     @Override
     protected void destroyProcessImpl() {
-        // TODO: implement
+        doDetach();
     }
 
     @Override
     protected void detachProcessImpl() {
-        // TODO: implement
+        doDetach();
+    }
+
+    private void doDetach() {
+        // TODO: detach
+        notifyProcessDetached();
     }
 
     @Override
     public boolean detachIsDefault() {
-        return true; // TODO: implement
+        return true;
     }
 
     @Nullable
