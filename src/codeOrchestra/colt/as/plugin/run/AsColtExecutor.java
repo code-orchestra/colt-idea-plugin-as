@@ -7,5 +7,5 @@ package codeOrchestra.colt.as.plugin.run;
  * Time: 18:15
  * To change this template use File | Settings | File Templates.
  */
-public class ColtExecutor {
+public class AsColtExecutor {
 }
