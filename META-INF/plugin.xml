@@ -7,9 +7,7 @@
 
   <depends>com.intellij.flex</depends>
 
-    <description><![CDATA[
-      COLT live coding tool integration plugin
-      ]]></description>
+  <description><![CDATA[ COLT live coding tool integration plugin ]]></description>
 
   <idea-version since-build="107.105"/>
 
@@ -35,5 +33,9 @@
           <action id="colt.compile.run.production" class="codeOrchestra.colt.as.plugin.actions.ColtProductionCompileAndRunAction" text="Production Build and Exec Run" description="Production Build and Exec Run" />
       </group>
   </actions>
+
+  <extensions defaultExtensionNs="com.intellij">
+      <configurationType implementation="codeOrchestra.colt.as.plugin.run.ColtConfigurationType"/>
+  </extensions>
 
 </idea-plugin>
