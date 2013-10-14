@@ -17,21 +17,21 @@ import java.net.URL;
 /**
  * @author Alexander Eliseyev
  */
-public final class ColtRemoteServiceProvider {
+public final class DeadClass {
 
-    private static final ColtRemoteServiceProvider instance = new ColtRemoteServiceProvider();
+    private static final DeadClass instance = new DeadClass();
 
     private static final String SERVICE_URL = "http://localhost:8092/rpc/coltService";
 
     private static final int MAX_ATTEMPT_COUNT = 5;
 
-    public static ColtRemoteServiceProvider get() {
+    public static DeadClass get() {
         return instance;
     }
 
     private ColtRemoteService coltRemoteService;
 
-    private ColtRemoteServiceProvider() {
+    private DeadClass() {
     }
 
     public synchronized ColtRemoteService getService() throws ColtRemoteServiceUnavailableException {

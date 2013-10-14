@@ -1,6 +1,8 @@
 package codeOrchestra.colt.as.plugin.run;
 
+import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
 import codeOrchestra.colt.core.plugin.run.ColtRunProfileState;
+import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
 import codeOrchestra.utils.StringUtils;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
@@ -46,8 +48,8 @@ public class AsColtRunConfiguration extends ModuleBasedConfiguration<AsRunConfig
     @Nullable
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment executionEnvironment) throws ExecutionException {
-        // TODO: create a connection here!
-
+        ColtRemoteServiceProvider coltRemoteServiceProvider = getProject().getComponent(ColtRemoteServiceProvider.class);
+        coltRemoteServiceProvider.initAndConnect(ColtAsRemoteService.class, coltProjectPath, getProject().getName());
         return new ColtRunProfileState(getProject());
     }
 

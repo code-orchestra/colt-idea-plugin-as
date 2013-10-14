@@ -1,10 +1,10 @@
 package codeOrchestra.colt.as.plugin.actions;
 
 
+import codeOrchestra.colt.as.rpc.DeadClass;
 import codeOrchestra.colt.core.rpc.ColtRemoteService;
 import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
 import codeOrchestra.colt.core.plugin.ColtSettings;
-import codeOrchestra.colt.as.rpc.ColtRemoteServiceProvider;
 import codeOrchestra.colt.as.rpc.ColtRemoteServiceUnavailableException;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -43,14 +43,14 @@ public abstract class GenericColtRemoteAction extends AnAction {
 
         // Get the service
         try {
-            coltRemoteService = ColtRemoteServiceProvider.get().getService();
+            coltRemoteService = DeadClass.get().getService();
         } catch (ColtRemoteServiceUnavailableException e) {
             Messages.showErrorDialog(e.getMessage(), COLT_TITLE);
             return;
         }
 
         // Authorize if haven't done it yet
-        if (!ColtRemoteServiceProvider.get().authorize()) {
+        if (!DeadClass.get().authorize()) {
             int result = Messages.showDialog("This plugin needs an authorization from the Colt application.", COLT_TITLE, new String[]{
                     "Try again", "Cancel"
             }, 0, Messages.getWarningIcon());
