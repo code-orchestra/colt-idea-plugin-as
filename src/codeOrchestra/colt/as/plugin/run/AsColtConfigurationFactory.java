@@ -27,11 +27,6 @@ public class AsColtConfigurationFactory extends ConfigurationFactory {
         return "COLT ActionScript";
     }
 
-    /**
-     * In this method you can configure defaults for the task, which are preferable to be used for your particular configuration type
-     * @param providerID
-     * @param task
-     */
     public void configureBeforeRunTaskDefaults(Key<? extends BeforeRunTask> providerID, BeforeRunTask task) {
         if ("Make".equals(providerID.toString())) {
             task.setEnabled(false);

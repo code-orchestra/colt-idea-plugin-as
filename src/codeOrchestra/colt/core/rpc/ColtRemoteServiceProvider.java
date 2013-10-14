@@ -5,6 +5,7 @@ import codeOrchestra.colt.as.rpc.model.ColtCompilerMessage;
 import codeOrchestra.colt.core.plugin.ColtSettings;
 import codeOrchestra.colt.core.plugin.launch.ColtLauncher;
 import codeOrchestra.colt.core.plugin.launch.ColtPathNotConfiguredException;
+import codeOrchestra.colt.core.plugin.view.ColtStatusWidget;
 import codeOrchestra.colt.core.rpc.discovery.ColtServiceLocator;
 import codeOrchestra.colt.core.rpc.security.InvalidShortCodeException;
 import codeOrchestra.colt.core.rpc.security.TooManyFailedCodeTypeAttemptsException;
@@ -16,6 +17,9 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.openapi.wm.WindowManager;
+import com.intellij.openapi.wm.ex.StatusBarEx;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
@@ -35,6 +39,7 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
     private ColtRemoteService coltRemoteService;
     private List<ColtRemoteServiceListener> listeners = new ArrayList<ColtRemoteServiceListener>();
     private ConnectionFinisherThread connectionFinisherThread;
+    private ColtStatusWidget coltStatusWidget;
 
     public <S extends ColtRemoteService> void initAndConnect(Class<S> serviceClass, String projectPath, String projectName) throws ColtPathNotConfiguredException, ExecutionException, IOException, ProcessCanceledException {
         // 1 - try to connect to existing COLT instance
@@ -145,6 +150,30 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
         }
 
         return false;
+    }
+
+    @Override
+    public void projectOpened() {
+        IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
+        StatusBarEx statusBar = (StatusBarEx) ideFrame.getStatusBar();
+        coltStatusWidget = new ColtStatusWidget(myProject, this);
+        statusBar.removeWidget(ColtStatusWidget.ID);
+        statusBar.addWidget(coltStatusWidget);
+    }
+
+    @Override
+    public void projectClosed() {
+        IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
+        if (ideFrame == null) {
+            IdeFrame[] allFrames = WindowManager.getInstance().getAllFrames();
+            if (allFrames != null && allFrames.length > 0) {
+                ideFrame = allFrames[0];
+            }
+        }
+        if (ideFrame != null) {
+            StatusBarEx statusBar = (StatusBarEx) ideFrame.getStatusBar();
+            statusBar.removeWidget(ColtStatusWidget.ID);
+        }
     }
 
     @Override

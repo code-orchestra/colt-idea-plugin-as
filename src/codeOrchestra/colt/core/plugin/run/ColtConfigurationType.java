@@ -1,19 +1,16 @@
 package codeOrchestra.colt.core.plugin.run;
 
 import codeOrchestra.colt.as.plugin.run.AsColtConfigurationFactory;
+import codeOrchestra.colt.core.plugin.icons.Icons;
 import com.intellij.execution.configurations.ConfigurationTypeBase;
-
-import javax.swing.*;
 
 /**
  * @author Alexander Eliseyev
  */
 public class ColtConfigurationType extends ConfigurationTypeBase {
 
-    private static final Icon ICON = new ImageIcon(ColtConfigurationType.class.getResource("/codeOrchestra/colt/core/plugin/icons/colt_16.png"));
-
     public ColtConfigurationType() {
-        super("codeOrchestra.colt", "COLT", "Start COLT Session", ICON);
+        super("codeOrchestra.colt", "COLT", "Start COLT Session", Icons.COLT_ICON_16);
         addFactory(new AsColtConfigurationFactory(this));
     }
 
