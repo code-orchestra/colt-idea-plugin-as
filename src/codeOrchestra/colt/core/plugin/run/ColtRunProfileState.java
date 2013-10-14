@@ -1,5 +1,7 @@
 package codeOrchestra.colt.core.plugin.run;
 
+import codeOrchestra.colt.as.plugin.controller.AsColtPluginController;
+import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
@@ -30,6 +32,10 @@ public class ColtRunProfileState implements RunProfileState {
         ConsoleViewImpl consoleView = new ConsoleViewImpl(project, false);
         ColtRemoteProcessHandler process = new ColtRemoteProcessHandler(project);
         consoleView.attachToProcess(process);
+
+        ColtAsRemoteService service = process.getService();
+        AsColtPluginController.runCompilationAction(service, project, AsColtPluginController.BASE_LIVE, null);
+
         return new DefaultExecutionResult(consoleView, process);
     }
 

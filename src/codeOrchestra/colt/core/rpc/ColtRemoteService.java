@@ -1,6 +1,5 @@
 package codeOrchestra.colt.core.rpc;
 
-import codeOrchestra.colt.as.rpc.model.ColtRemoteProject;
 import codeOrchestra.colt.core.rpc.model.ColtState;
 import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
 import codeOrchestra.colt.core.rpc.security.InvalidShortCodeException;

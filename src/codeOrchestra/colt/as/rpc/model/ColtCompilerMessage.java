@@ -15,6 +15,10 @@ public class ColtCompilerMessage {
     public ColtCompilerMessage() {
     }
 
+    public ColtCompilerMessage(String fullMessage) {
+        this.fullMessage = fullMessage;
+    }
+
     public String getSourcePath() {
         return sourcePath;
     }
@@ -59,4 +63,7 @@ public class ColtCompilerMessage {
         return fullMessage;
     }
 
+    public void setFullMessage(String fullMessage) {
+        this.fullMessage = fullMessage;
+    }
 }

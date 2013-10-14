@@ -1,18 +1,37 @@
 package codeOrchestra.colt.as.plugin.controller;
 
 import codeOrchestra.colt.as.plugin.actions.AsGenericColtRemoteAction;
+import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
+import codeOrchestra.colt.as.rpc.model.ColtCompilationResult;
+import codeOrchestra.colt.as.rpc.model.ColtCompilerMessage;
 import codeOrchestra.colt.as.rpc.model.ColtRemoteProject;
 import codeOrchestra.colt.as.rpc.model.codec.ColtRemoteProjectEncoder;
+import codeOrchestra.colt.core.plugin.ColtSettings;
+import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
+import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
+import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
+import codeOrchestra.utils.EventUtils;
 import codeOrchestra.utils.XMLUtils;
 import com.intellij.lang.javascript.flex.FlexUtils;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfiguration;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfigurationManager;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.openapi.wm.WindowManager;
+import com.intellij.openapi.wm.ex.StatusBarEx;
+import org.jetbrains.annotations.NotNull;
 
 import javax.xml.transform.TransformerException;
 import java.util.ArrayList;
@@ -22,6 +41,91 @@ import java.util.List;
  * @author Alexander Eliseyev
  */
 public class AsColtPluginController {
+
+    public static final CompilationAction BASE_LIVE = new CompilationAction() {
+        @Override
+        public String getName() {
+            return "Live Build";
+        }
+        @Override
+        public ColtCompilationResult doRunCompilation(ColtAsRemoteService coltRemoteService, AnActionEvent actionEvent) throws ColtRemoteTransferableException {
+            return coltRemoteService.runBaseCompilation(ColtSettings.getInstance().getSecurityToken());
+        }
+    };
+
+    public static final CompilationAction BASE_LIVE_AND_RUN = new CompilationAndRunAction() {
+        @Override
+        public String getName() {
+            return "Live Build and Exec Run";
+        }
+
+        @Override
+        protected ColtCompilationResult doRunCompilationWithoutRun(ColtAsRemoteService coltRemoteService) throws ColtRemoteTransferableException {
+            return coltRemoteService.runBaseCompilation(ColtSettings.getInstance().getSecurityToken(), false);
+        }
+    };
+
+    public static final CompilationAction PRODUCTION = new CompilationAction() {
+        @Override
+        public String getName() {
+            return "Production Build";
+        }
+        @Override
+        public ColtCompilationResult doRunCompilation(ColtAsRemoteService coltRemoteService, AnActionEvent actionEvent) throws ColtRemoteTransferableException {
+            return coltRemoteService.runProductionCompilation(ColtSettings.getInstance().getSecurityToken(), true);
+        }
+    };
+
+    public static final CompilationAction PRODUCTION_AND_RUN = new CompilationAndRunAction() {
+        @Override
+        public String getName() {
+            return "Production Build and Exec Run";
+        }
+        @Override
+        protected ColtCompilationResult doRunCompilationWithoutRun(ColtAsRemoteService coltRemoteService) throws ColtRemoteTransferableException {
+            return coltRemoteService.runProductionCompilation(ColtSettings.getInstance().getSecurityToken(), true);
+        }
+    };
+
+    public static void runCompilationAction(final ColtAsRemoteService coltRemoteService, final Project ideaProject, final CompilationAction compilationAction, final AnActionEvent actionEvent) {
+        try {
+            coltRemoteService.checkAuth(ColtSettings.getInstance().getSecurityToken());
+        } catch (InvalidAuthTokenException e) {
+            ColtSettings.getInstance().invalidate();
+            runCompilationAction(coltRemoteService, ideaProject, compilationAction, actionEvent);
+        }
+
+        new Task.Backgroundable(ideaProject, "Live Build", false) {
+            @Override
+            public void run(@NotNull ProgressIndicator progressIndicator) {
+                // Report errors and warnings
+                ColtRemoteServiceProvider remoteServiceProvider = ideaProject.getComponent(ColtRemoteServiceProvider.class);
+
+                try {
+                    ColtCompilationResult coltCompilationResult = compilationAction.doRunCompilation(coltRemoteService, actionEvent);
+
+                    final IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
+                    StatusBarEx statusBar = (StatusBarEx) ideFrame.getStatusBar();
+
+                    if (coltCompilationResult.isSuccessful()) {
+                        statusBar.notifyProgressByBalloon(MessageType.INFO, compilationAction.getName() + " is successful");
+                    } else {
+                        statusBar.notifyProgressByBalloon(MessageType.ERROR, compilationAction.getName() + " has failed, check the error messages");
+                    }
+
+                    for (ColtCompilerMessage coltCompilerMessage : coltCompilationResult.getErrorMessages()) {
+                        remoteServiceProvider.fireCompileMessageAvailable(coltCompilerMessage);
+                    }
+                    for (ColtCompilerMessage coltCompilerMessage : coltCompilationResult.getWarningMessages()) {
+                        remoteServiceProvider.fireCompileMessageAvailable(coltCompilerMessage);
+
+                    }
+                } catch (ColtRemoteTransferableException e) {
+                    remoteServiceProvider.fireCompileMessageAvailable(new ColtCompilerMessage("Can't compile with COLT: " + e.getMessage()));
+                }
+            }
+        }.queue();
+    }
 
     /**
      * @param project IDEA project
@@ -130,6 +234,41 @@ public class AsColtPluginController {
         }
 
         return project;
+    }
+
+    public static interface CompilationAction {
+        String getName();
+        ColtCompilationResult doRunCompilation(ColtAsRemoteService coltRemoteService, AnActionEvent actionEvent) throws ColtRemoteTransferableException;
+    }
+
+    private static abstract class CompilationAndRunAction implements CompilationAction {
+        @Override
+        public final ColtCompilationResult doRunCompilation(ColtAsRemoteService coltRemoteService, final AnActionEvent actionEvent) throws ColtRemoteTransferableException {
+            ColtCompilationResult coltCompilationResult = doRunCompilationWithoutRun(coltRemoteService);
+
+            if (coltCompilationResult.isSuccessful()) {
+                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        ApplicationManager.getApplication().runReadAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                final AnAction runConfiguration = ActionManager.getInstance().getAction("RunClass");
+                                final AnActionEvent newEvent = EventUtils.cloneEvent(actionEvent);
+
+                                for (int i = 0; i < 5; i++) {
+                                    runConfiguration.update(newEvent);
+                                }
+                                runConfiguration.actionPerformed(newEvent);
+                            }
+                        });
+                    }
+                });
+            }
+
+            return coltCompilationResult;
+        }
+        protected abstract ColtCompilationResult doRunCompilationWithoutRun(ColtAsRemoteService coltRemoteService) throws ColtRemoteTransferableException;
     }
 
 }

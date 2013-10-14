@@ -1,11 +1,11 @@
 package codeOrchestra.colt.core.plugin.run;
 
 import codeOrchestra.colt.as.rpc.model.ColtCompilerMessage;
+import codeOrchestra.colt.core.rpc.ColtRemoteService;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceListener;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.process.ProcessOutputTypes;
-import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +31,10 @@ public class ColtRemoteProcessHandler extends ProcessHandler implements ColtRemo
     public void startNotify() {
         super.startNotify();
         notifyTextAvailable("Established a connection with COLT running project " + remoteServiceProvider.getService().getState().getProjectName() + "\n", ProcessOutputTypes.SYSTEM);
+    }
+
+    public ColtRemoteServiceProvider getRemoteServiceProvider() {
+        return remoteServiceProvider;
     }
 
     @Override
@@ -73,4 +77,10 @@ public class ColtRemoteProcessHandler extends ProcessHandler implements ColtRemo
     public void onConnected() {
     }
 
+    public <S extends ColtRemoteService> S getService() {
+        if (remoteServiceProvider == null) {
+            return null;
+        }
+        return remoteServiceProvider.getService();
+    }
 }

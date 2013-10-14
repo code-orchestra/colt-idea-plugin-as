@@ -2,7 +2,6 @@ package codeOrchestra.colt.core.plugin;
 
 import codeOrchestra.colt.core.plugin.view.ColtConfigurationPage;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;

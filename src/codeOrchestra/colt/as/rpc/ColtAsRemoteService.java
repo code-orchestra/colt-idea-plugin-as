@@ -1,7 +1,6 @@
 package codeOrchestra.colt.as.rpc;
 
 import codeOrchestra.colt.as.rpc.model.ColtCompilationResult;
-import codeOrchestra.colt.as.rpc.model.ColtRemoteProject;
 import codeOrchestra.colt.core.rpc.ColtRemoteService;
 import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
 

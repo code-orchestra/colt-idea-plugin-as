@@ -3,7 +3,6 @@ package codeOrchestra.colt.as.plugin.actions;
 
 import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
 import codeOrchestra.colt.core.plugin.ColtSettings;
-import codeOrchestra.colt.core.rpc.ColtRemoteService;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
 import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
 import com.intellij.openapi.actionSystem.AnAction;

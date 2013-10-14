@@ -1,13 +1,11 @@
 package codeOrchestra.colt.core.plugin.view;
 
+import codeOrchestra.colt.as.plugin.controller.AsColtPluginController;
+import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
 import codeOrchestra.colt.as.rpc.model.ColtCompilerMessage;
 import codeOrchestra.colt.core.plugin.icons.Icons;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceListener;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
-import codeOrchestra.utils.EventUtils;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.CustomStatusBarWidget;
@@ -20,7 +18,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
 
 /**
  * @author Alexander Eliseyev
@@ -31,7 +28,7 @@ public class ColtStatusWidget extends JButton implements CustomStatusBarWidget, 
 
     private Project project;
 
-    public ColtStatusWidget(Project project, ColtRemoteServiceProvider remoteServiceProvider) {
+    public ColtStatusWidget(final Project project, final ColtRemoteServiceProvider remoteServiceProvider) {
         this.project = project;
 
         setOpaque(false);
@@ -46,16 +43,8 @@ public class ColtStatusWidget extends JButton implements CustomStatusBarWidget, 
         addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                if (!(actionListener instanceof InputEvent)) {
-                    return;
-                }
-
                 setIcon(Icons.LIVE_SWITCHING);
-
-                AnAction liveRunAction = ActionManager.getInstance().getAction("RunClass");
-                AnActionEvent actionEvent = AnActionEvent.createFromInputEvent(liveRunAction, EventUtils.createFakeInputEvent(event), "");
-                liveRunAction.update(actionEvent);
-                liveRunAction.actionPerformed(actionEvent);
+                AsColtPluginController.runCompilationAction((ColtAsRemoteService) remoteServiceProvider.getService(), ColtStatusWidget.this.project, AsColtPluginController.BASE_LIVE, null);
             }
         });
 
@@ -99,7 +88,7 @@ public class ColtStatusWidget extends JButton implements CustomStatusBarWidget, 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                setIcon(Icons.LIVE_ON);
+                setIcon(Icons.LIVE_OFF);
                 setEnabled(true);
 
             }

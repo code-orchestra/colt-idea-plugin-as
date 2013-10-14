@@ -54,7 +54,7 @@ public class AsColtConfigurable extends SettingsEditor<AsColtRunConfiguration> {
                 false);
 
         coltProjectPathPane.add(coltProjectPathChooser, BorderLayout.CENTER);
-        JButton exportButton = new JButton("Export");
+        JButton exportButton = new JButton("New");
         exportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
