@@ -50,6 +50,11 @@ public class AsColtRunConfiguration extends ModuleBasedConfiguration<AsRunConfig
         return new AsColtConfigurable(getProject());
     }
 
+    @Override
+    public boolean excludeCompileBeforeLaunchOption() {
+        return true;
+    }
+
     @Nullable
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment executionEnvironment) throws ExecutionException {
