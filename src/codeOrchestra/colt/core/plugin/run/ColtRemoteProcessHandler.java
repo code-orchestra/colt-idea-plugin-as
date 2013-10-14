@@ -1,5 +1,7 @@
 package codeOrchestra.colt.core.plugin.run;
 
+import codeOrchestra.colt.core.rpc.ColtRemoteServiceListener;
+import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nullable;
@@ -9,12 +11,17 @@ import java.io.OutputStream;
 /**
  * @author Alexander Eliseyev
  */
-public class ColtRemoteProcessHandler extends ProcessHandler {
+public class ColtRemoteProcessHandler extends ProcessHandler implements ColtRemoteServiceListener {
+
+    private final ColtRemoteServiceProvider remoteServiceProvider;
 
     private Project project;
 
     public ColtRemoteProcessHandler(Project project) {
         this.project = project;
+
+        remoteServiceProvider = project.getComponent(ColtRemoteServiceProvider.class);
+        remoteServiceProvider.addListener(this);
     }
 
     @Override
@@ -28,8 +35,7 @@ public class ColtRemoteProcessHandler extends ProcessHandler {
     }
 
     private void doDetach() {
-        // TODO: detach
-        notifyProcessDetached();
+        remoteServiceProvider.disconnect();
     }
 
     @Override
@@ -41,5 +47,14 @@ public class ColtRemoteProcessHandler extends ProcessHandler {
     @Override
     public OutputStream getProcessInput() {
         return null;
+    }
+
+    @Override
+    public void onConnected() {
+    }
+
+    @Override
+    public void onDisconnected() {
+        notifyProcessDetached();
     }
 }

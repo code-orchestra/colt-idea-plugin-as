@@ -28,11 +28,12 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
 
     public ColtRemoteServiceProvider(Project project) {
         super(project);
+        connectionFinisherThread = new ConnectionFinisherThread();
     }
 
     private ColtRemoteService coltRemoteService;
-
     private List<ColtRemoteServiceListener> listeners = new ArrayList<ColtRemoteServiceListener>();
+    private ConnectionFinisherThread connectionFinisherThread;
 
     public <S extends ColtRemoteService> void initAndConnect(Class<S> serviceClass, String projectPath, String projectName) throws ColtPathNotConfiguredException, ExecutionException, IOException, ProcessCanceledException {
         // 1 - try to connect to existing COLT instance
@@ -81,7 +82,7 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
     }
 
     public void disconnect() {
-        coltRemoteService = null;
+        setColtRemoteService(null);
     }
 
     public <S extends ColtRemoteService> S getService() {
@@ -101,7 +102,7 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
     private boolean makeNewSecurityToken(boolean newRequest) {
         if (newRequest) {
             try {
-                coltRemoteService.requestShortCode("COLT IntelliJ IDEA Plugin");
+                coltRemoteService.requestShortCode("IDEA Plugin");
             } catch (ColtRemoteTransferableException e) {
                 Messages.showErrorDialog("Can't request an authorization key from COLT.\nMake sure COLT is active and running", AsGenericColtRemoteAction.COLT_TITLE);
                 return false;
@@ -146,8 +147,43 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
     }
 
     @Override
+    public void initComponent() {
+        connectionFinisherThread.start();
+    }
+
+    @Override
     public void disposeComponent() {
+        connectionFinisherThread.stopRightTHere();
         listeners.clear();
+    }
+
+    private class ConnectionFinisherThread extends Thread {
+
+        private boolean mustStop;
+
+        public void stopRightTHere() {
+            mustStop = true;
+        }
+
+        @Override
+        public void run() {
+            mustStop = false;
+            while (!mustStop) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // ignore
+                }
+
+                if (coltRemoteService != null) {
+                    try {
+                        coltRemoteService.ping();
+                    } catch (Throwable t) {
+                        setColtRemoteService(null);
+                    }
+                }
+            }
+        }
     }
 
 }
