@@ -16,9 +16,16 @@
   </application-components>
 
   <project-components>
-      <component><implementation-class>codeOrchestra.colt.core.plugin.view.ColtConsole</implementation-class></component>
-      <component><implementation-class>codeOrchestra.colt.core.rpc.discovery.FileBasedColtServiceLocator</implementation-class></component>
-      <component><implementation-class>codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider</implementation-class></component>
+      <component>
+          <implementation-class>codeOrchestra.colt.core.plugin.view.ColtConsole</implementation-class>
+      </component>
+      <component>
+          <interface-class>codeOrchestra.colt.core.rpc.discovery.ColtServiceLocator</interface-class>
+          <implementation-class>codeOrchestra.colt.core.rpc.discovery.FileBasedColtServiceLocator</implementation-class>
+      </component>
+      <component>
+          <implementation-class>codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider</implementation-class>
+      </component>
   </project-components>
 
   <actions>

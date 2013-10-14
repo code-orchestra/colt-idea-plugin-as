@@ -22,7 +22,7 @@ public class FileBasedColtServiceLocator extends AbstractColtServiceLocator {
     }
 
     @Override
-    protected <S extends ColtRemoteService> S locateService(Class<S> serviceClass, String projectPath, String name) {
+    public  <S extends ColtRemoteService> S locateService(Class<S> serviceClass, String projectPath, String name) {
         File coltProjectStorageDir = ProjectStorageHelper.getColtProjectStorageDir(projectPath);
         if (coltProjectStorageDir == null) {
             return null;

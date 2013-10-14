@@ -9,4 +9,6 @@ public interface ColtServiceLocator {
 
     <S extends ColtRemoteService> S waitForService(Class<S> serviceClass, String projectPath, String name);
 
+    <S extends ColtRemoteService> S locateService(Class<S> serviceClass, String projectPath, String name);
+
 }

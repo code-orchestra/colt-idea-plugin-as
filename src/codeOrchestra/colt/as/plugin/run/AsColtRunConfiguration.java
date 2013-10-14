@@ -1,6 +1,7 @@
 package codeOrchestra.colt.as.plugin.run;
 
 import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
+import codeOrchestra.colt.core.plugin.launch.ColtPathNotConfiguredException;
 import codeOrchestra.colt.core.plugin.run.ColtRunProfileState;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
 import codeOrchestra.utils.StringUtils;
@@ -22,6 +23,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -49,7 +51,14 @@ public class AsColtRunConfiguration extends ModuleBasedConfiguration<AsRunConfig
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment executionEnvironment) throws ExecutionException {
         ColtRemoteServiceProvider coltRemoteServiceProvider = getProject().getComponent(ColtRemoteServiceProvider.class);
-        coltRemoteServiceProvider.initAndConnect(ColtAsRemoteService.class, coltProjectPath, getProject().getName());
+
+        try {
+            coltRemoteServiceProvider.initAndConnect(ColtAsRemoteService.class, coltProjectPath, getProject().getName());
+        } catch (ColtPathNotConfiguredException e) {
+            throw new ExecutionException("COLT installation path is not configured. Go to Preferences -> COLT", e);
+        } catch (IOException e) {
+            throw new ExecutionException("Error while trying to establish COLT connection", e);
+        }
         return new ColtRunProfileState(getProject());
     }
 
