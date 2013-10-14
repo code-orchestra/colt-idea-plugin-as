@@ -3,11 +3,10 @@ package codeOrchestra.colt.as.plugin.actions;
 import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
 import codeOrchestra.colt.as.rpc.model.ColtCompilationResult;
 import codeOrchestra.colt.as.rpc.model.ColtCompilerMessage;
+import codeOrchestra.colt.core.plugin.ColtSettings;
+import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
 import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
 import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
-import codeOrchestra.colt.core.plugin.ColtSettings;
-import codeOrchestra.colt.core.plugin.view.ColtConsole;
-import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
@@ -35,9 +34,6 @@ public abstract class ColtAbstractCompileAction extends AsGenericColtRemoteActio
             @Override
             public void run(@NotNull ProgressIndicator progressIndicator) {
                 try {
-                    // TODO: connect with run console
-
-                    ColtConsole.getInstance(ideaProject).clear();
                     ColtCompilationResult coltCompilationResult = doRunCompilation(event, coltRemoteService);
 
                     final IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
@@ -50,11 +46,13 @@ public abstract class ColtAbstractCompileAction extends AsGenericColtRemoteActio
                     }
 
                     // Report errors and warnings
+                    ColtRemoteServiceProvider remoteServiceProvider = ideaProject.getComponent(ColtRemoteServiceProvider.class);
                     for (ColtCompilerMessage coltCompilerMessage : coltCompilationResult.getErrorMessages()) {
-                        ColtConsole.getInstance(ideaProject).append(coltCompilerMessage.getFullMessage(), ConsoleViewContentType.ERROR_OUTPUT);
+                        remoteServiceProvider.fireCompileMessageAvailable(coltCompilerMessage);
                     }
                     for (ColtCompilerMessage coltCompilerMessage : coltCompilationResult.getWarningMessages()) {
-                        ColtConsole.getInstance(ideaProject).append(coltCompilerMessage.getFullMessage(), ConsoleViewContentType.NORMAL_OUTPUT);
+                        remoteServiceProvider.fireCompileMessageAvailable(coltCompilerMessage);
+
                     }
                 } catch (ColtRemoteTransferableException e) {
                     // TODO: handle nicely

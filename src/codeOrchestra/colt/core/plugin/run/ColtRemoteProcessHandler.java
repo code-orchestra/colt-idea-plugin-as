@@ -1,8 +1,11 @@
 package codeOrchestra.colt.core.plugin.run;
 
+import codeOrchestra.colt.as.rpc.model.ColtCompilerMessage;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceListener;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
 import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.process.ProcessOutputTypes;
+import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +25,17 @@ public class ColtRemoteProcessHandler extends ProcessHandler implements ColtRemo
 
         remoteServiceProvider = project.getComponent(ColtRemoteServiceProvider.class);
         remoteServiceProvider.addListener(this);
+    }
+
+    @Override
+    public void startNotify() {
+        super.startNotify();
+        notifyTextAvailable("Established a connection with COLT running project " + remoteServiceProvider.getService().getState().getProjectName() + "\n", ProcessOutputTypes.SYSTEM);
+    }
+
+    @Override
+    public void onMessage(ColtCompilerMessage coltCompilerMessage) {
+        notifyTextAvailable(coltCompilerMessage.getFullMessage(), coltCompilerMessage.getType().equals("Error") ? ProcessOutputTypes.STDERR : ProcessOutputTypes.STDOUT);
     }
 
     @Override
@@ -50,11 +64,13 @@ public class ColtRemoteProcessHandler extends ProcessHandler implements ColtRemo
     }
 
     @Override
-    public void onConnected() {
+    public void onDisconnected() {
+        notifyTextAvailable("\nDisconnected", ProcessOutputTypes.SYSTEM);
+        notifyProcessDetached();
     }
 
     @Override
-    public void onDisconnected() {
-        notifyProcessDetached();
+    public void onConnected() {
     }
+
 }

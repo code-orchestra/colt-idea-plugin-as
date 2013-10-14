@@ -1,6 +1,7 @@
 package codeOrchestra.colt.core.rpc;
 
 import codeOrchestra.colt.as.plugin.actions.AsGenericColtRemoteAction;
+import codeOrchestra.colt.as.rpc.model.ColtCompilerMessage;
 import codeOrchestra.colt.core.plugin.ColtSettings;
 import codeOrchestra.colt.core.plugin.launch.ColtLauncher;
 import codeOrchestra.colt.core.plugin.launch.ColtPathNotConfiguredException;
@@ -155,6 +156,12 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
     public void disposeComponent() {
         connectionFinisherThread.stopRightTHere();
         listeners.clear();
+    }
+
+    public synchronized void fireCompileMessageAvailable(ColtCompilerMessage coltCompilerMessage) {
+        for (ColtRemoteServiceListener listener : listeners) {
+            listener.onMessage(coltCompilerMessage);
+        }
     }
 
     private class ConnectionFinisherThread extends Thread {
