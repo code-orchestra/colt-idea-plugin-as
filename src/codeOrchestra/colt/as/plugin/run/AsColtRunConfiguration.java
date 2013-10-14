@@ -16,8 +16,11 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.SettingsEditor;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -50,15 +53,28 @@ public class AsColtRunConfiguration extends ModuleBasedConfiguration<AsRunConfig
     @Nullable
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment executionEnvironment) throws ExecutionException {
-        ColtRemoteServiceProvider coltRemoteServiceProvider = getProject().getComponent(ColtRemoteServiceProvider.class);
+        final ColtRemoteServiceProvider coltRemoteServiceProvider = getProject().getComponent(ColtRemoteServiceProvider.class);
 
-        try {
-            coltRemoteServiceProvider.initAndConnect(ColtAsRemoteService.class, coltProjectPath, getProject().getName());
-        } catch (ColtPathNotConfiguredException e) {
-            throw new ExecutionException("COLT installation path is not configured. Go to Preferences -> COLT", e);
-        } catch (IOException e) {
-            throw new ExecutionException("Error while trying to establish COLT connection", e);
+        ThrowableComputable<Boolean, ExecutionException> coltStartTask = new ThrowableComputable<Boolean, ExecutionException>() {
+            @Override
+            public Boolean compute() throws ExecutionException {
+                try {
+                    coltRemoteServiceProvider.initAndConnect(ColtAsRemoteService.class, coltProjectPath, getProject().getName());
+                } catch (ProcessCanceledException e) {
+                    return false;
+                } catch (ColtPathNotConfiguredException e) {
+                    throw new ExecutionException("COLT installation path is not configured. Go to Preferences -> COLT", e);
+                } catch (IOException e) {
+                    throw new ExecutionException("Error while trying to establish COLT connection", e);
+                }
+                return true;
+            }
+        };
+
+        if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(coltStartTask, "Establishing COLT connection", true, getProject())) {
+            return null;
         }
+
         return new ColtRunProfileState(getProject());
     }
 

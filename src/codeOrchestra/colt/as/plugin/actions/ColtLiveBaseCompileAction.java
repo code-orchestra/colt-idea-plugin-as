@@ -1,5 +1,6 @@
 package codeOrchestra.colt.as.plugin.actions;
 
+import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
 import codeOrchestra.colt.as.rpc.model.ColtCompilationResult;
 import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
 import codeOrchestra.colt.core.plugin.ColtSettings;
@@ -15,8 +16,8 @@ public class ColtLiveBaseCompileAction extends ColtAbstractCompileAction {
     }
 
     @Override
-    protected ColtCompilationResult doRunCompilation(AnActionEvent event) throws ColtRemoteTransferableException {
-        return getColtRemoteService().runBaseCompilation(ColtSettings.getInstance().getSecurityToken());
+    protected ColtCompilationResult doRunCompilation(AnActionEvent event, ColtAsRemoteService coltRemoteService) throws ColtRemoteTransferableException {
+        return coltRemoteService.runBaseCompilation(ColtSettings.getInstance().getSecurityToken());
     }
 
 }

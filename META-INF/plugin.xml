@@ -31,9 +31,6 @@
   <actions>
       <group id="COLT.Menu" text="COLT" description="COLT plugin menu">
           <add-to-group group-id="MainMenu" anchor="after" relative-to-action="RunMenu" />
-          <action id="colt.launch" class="codeOrchestra.colt.as.plugin.actions.ColtLaunchAction" text="Launch COLT" description="Launch COLT" />
-          <action id="colt.export" class="codeOrchestra.colt.as.plugin.actions.ColtExportAction" text="Export COLT Project" description="Save COLT project file" />
-          <separator/>
           <action id="colt.compile.live" class="codeOrchestra.colt.as.plugin.actions.ColtLiveBaseCompileAction" text="Live Build" description="Run Base Live Compilation" />
           <action id="colt.compile.production" class="codeOrchestra.colt.as.plugin.actions.ColtProductionCompileAction" text="Production Build" description="Run Production Compilation" />
           <separator/>

@@ -3,6 +3,8 @@ package codeOrchestra.colt.core.rpc.discovery;
 import codeOrchestra.colt.core.rpc.ColtRemoteService;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 
 /**
@@ -18,9 +20,11 @@ public abstract class AbstractColtServiceLocator extends AbstractProjectComponen
     }
 
     @Override
-    public <S extends ColtRemoteService> S waitForService(Class<S> serviceClass, String projectPath, String name) {
+    public <S extends ColtRemoteService> S waitForService(Class<S> serviceClass, String projectPath, String name) throws ProcessCanceledException {
         long timeout = COLT_SERVICE_LOOKOUT_TIMEOUT;
         while (timeout > 0) {
+            ProgressManager.checkCanceled();
+
             try {
                 Thread.sleep(SERVICE_AVAILABILITY_CHECK_PERIOD);
             } catch (InterruptedException e) {

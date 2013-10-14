@@ -1,11 +1,11 @@
-package codeOrchestra.colt.as.rpc;
+package codeOrchestra.colt.core.rpc;
 
 /**
  * @author Alexander Eliseyev
  */
 public class ColtRemoteServiceUnavailableException extends Exception {
 
-    private static final String DEFAULT_MESSAGE = "Can't reach Colt remote service API";
+    private static final String DEFAULT_MESSAGE = "Can't reach COLT remote service API";
 
     public ColtRemoteServiceUnavailableException() {
         this(DEFAULT_MESSAGE);

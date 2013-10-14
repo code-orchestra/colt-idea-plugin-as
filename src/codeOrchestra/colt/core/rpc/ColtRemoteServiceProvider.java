@@ -1,13 +1,21 @@
 package codeOrchestra.colt.core.rpc;
 
+import codeOrchestra.colt.as.plugin.actions.AsGenericColtRemoteAction;
+import codeOrchestra.colt.core.plugin.ColtSettings;
 import codeOrchestra.colt.core.plugin.launch.ColtLauncher;
 import codeOrchestra.colt.core.plugin.launch.ColtPathNotConfiguredException;
 import codeOrchestra.colt.core.rpc.discovery.ColtServiceLocator;
+import codeOrchestra.colt.core.rpc.security.InvalidShortCodeException;
+import codeOrchestra.colt.core.rpc.security.TooManyFailedCodeTypeAttemptsException;
 import codeOrchestra.colt.core.workset.Workset;
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,8 +34,9 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
 
     private List<ColtRemoteServiceListener> listeners = new ArrayList<ColtRemoteServiceListener>();
 
-    public <S extends ColtRemoteService> void initAndConnect(Class<S> serviceClass, String projectPath, String projectName) throws ColtPathNotConfiguredException, ExecutionException, IOException {
+    public <S extends ColtRemoteService> void initAndConnect(Class<S> serviceClass, String projectPath, String projectName) throws ColtPathNotConfiguredException, ExecutionException, IOException, ProcessCanceledException {
         // 1 - try to connect to existing COLT instance
+        ProgressManager.progress("Trying to connect to existing COLT instance");
         ColtServiceLocator serviceLocator = myProject.getComponent(ColtServiceLocator.class);
         S service = serviceLocator.locateService(serviceClass, projectPath, projectName);
         if (service != null) {
@@ -36,10 +45,12 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
         }
 
         // 2 - if it fails, start the COLT
+        ProgressManager.progress("Starting new COLT instance");
         Workset.addProjectPath(projectPath, true);
         ColtLauncher.launch();
 
         // 3 - and connect to it
+        ProgressManager.progress("Trying to connect to COLT");
         setColtRemoteService(serviceLocator.waitForService(serviceClass, projectPath, projectName));
     }
 
@@ -77,8 +88,66 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
         return (S) coltRemoteService;
     }
 
+    public boolean authorize() {
+        ColtSettings coltSettings = ColtSettings.getInstance();
+
+        if (coltSettings.isEmpty()) {
+            return makeNewSecurityToken(true);
+        }
+
+        return true;
+    }
+
+    private boolean makeNewSecurityToken(boolean newRequest) {
+        if (newRequest) {
+            try {
+                coltRemoteService.requestShortCode("COLT IntelliJ IDEA Plugin");
+            } catch (ColtRemoteTransferableException e) {
+                Messages.showErrorDialog("Can't request an authorization key from COLT.\nMake sure COLT is active and running", AsGenericColtRemoteAction.COLT_TITLE);
+                return false;
+            }
+        }
+
+        String shortCode = Messages.showInputDialog("Enter the short key displayed in COLT", AsGenericColtRemoteAction.COLT_TITLE, Messages.getQuestionIcon());
+        if (StringUtils.isNotEmpty(shortCode)) {
+            String token;
+            try {
+                token = coltRemoteService.obtainAuthToken(shortCode);
+            } catch (TooManyFailedCodeTypeAttemptsException e) {
+                Messages.showErrorDialog("Too many failed code input attempts, try again later", AsGenericColtRemoteAction.COLT_TITLE);
+                return false;
+            } catch (InvalidShortCodeException e) {
+                int result = Messages.showDialog("Invalid short code entered", AsGenericColtRemoteAction.COLT_TITLE, new String[] {
+                        "Try again", "Cancel"
+                }, 0, Messages.getWarningIcon());
+
+                if (result == 0) {
+                    return makeNewSecurityToken(false);
+                }
+
+                return false;
+            }
+
+            ColtSettings.getInstance().setSecurityToken(token);
+            Messages.showInfoMessage("Successfully connected to COLT", AsGenericColtRemoteAction.COLT_TITLE);
+
+            return true;
+        } else {
+            int result = Messages.showDialog("Empty short code entered", AsGenericColtRemoteAction.COLT_TITLE, new String[] {
+                    "Try again", "Cancel"
+            }, 0, Messages.getWarningIcon());
+
+            if (result == 0) {
+                return makeNewSecurityToken(false);
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public void disposeComponent() {
         listeners.clear();
     }
+
 }
