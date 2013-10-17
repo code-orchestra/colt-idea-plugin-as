@@ -95,7 +95,7 @@ public class ColtRemoteProjectEncoder {
             Element settingsElement = createElement("settings");
             {
                 createElement("clear-log", "false", settingsElement);
-                createElement("disconnect", "false", settingsElement);
+                createElement("disconnect", "true", settingsElement);
             }
             liveElement.appendChild(settingsElement);
 
