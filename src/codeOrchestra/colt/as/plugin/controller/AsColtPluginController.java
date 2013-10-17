@@ -134,11 +134,15 @@ public class AsColtPluginController {
         }.queue();
     }
 
+    public static String export(Project project) {
+        return export(project, project.getName(), null);
+    }
+
     /**
      * @param project IDEA project
      * @return COLT project path
      */
-    public static String export(Project project) {
+    public static String export(Project project, String projectName, String mainClass) {
         Module[] allModules = ModuleManager.getInstance(project).getModules();
         if (allModules.length == 0) {
             Messages.showErrorDialog("No modules in the ideaProject", AsGenericColtRemoteAction.COLT_TITLE);
@@ -166,11 +170,11 @@ public class AsColtPluginController {
             }
         }
 
-        ColtRemoteProject coltProject = saveConfiguration(modulesPairs, project);
+        ColtRemoteProject coltProject = saveConfiguration(modulesPairs, project, projectName, mainClass);
         return coltProject.getPath();
     }
 
-    private static ColtRemoteProject saveConfiguration(List<Pair<Module, Boolean>> modules, Project ideaProject) {
+    private static ColtRemoteProject saveConfiguration(List<Pair<Module, Boolean>> modules, Project ideaProject, String projectName, String mainClass) {
         Module mainModule = null;
         for (Pair<Module, Boolean> modulePair : modules) {
             if (modulePair.getSecond()) {
@@ -211,8 +215,6 @@ public class AsColtPluginController {
         String modulePath = mainModuleRootManager.getContentRootUrls()[0].replace("file://", "");
         String workDir = ideaProject.getBasePath();
 
-        String projectName = ideaProject.getName();
-
         project.setName(projectName);
         project.setParentIDEProjectPath(modulePath);
         project.setPath(workDir + "/" + projectName + ".colt");
@@ -225,7 +227,12 @@ public class AsColtPluginController {
         final FlexBuildConfiguration activeBC = FlexBuildConfigurationManager.getInstance(mainModule).getActiveConfiguration();
 
         project.setCustomConfigPath(activeBC.getCompilerOptions().getAdditionalConfigFilePath());
-        project.setMainClass(FlexUtils.getPathToMainClassFile(activeBC.getMainClass(), mainModule));
+
+        if (mainClass == null) {
+            project.setMainClass(FlexUtils.getPathToMainClassFile(activeBC.getMainClass(), mainModule));
+        } else {
+            project.setMainClass(mainClass);
+        }
 
         project.setOutputFileName(activeBC.getOutputFileName());
         project.setOutputPath(workDir + "/output");

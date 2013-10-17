@@ -34,6 +34,12 @@
           <action id="colt.compile.run.live" class="codeOrchestra.colt.as.plugin.actions.ColtLiveBaseCompileAndRunAction" text="Live Build and Exec Run" description="Live Build and Exec Run" />
           <action id="colt.compile.run.production" class="codeOrchestra.colt.as.plugin.actions.ColtProductionCompileAndRunAction" text="Production Build and Exec Run" description="Production Build and Exec Run" />
       </group>
+
+      <group id="COLT.Run.Actions" text="Run With COLT">
+          <add-to-group group-id="ProjectViewPopupMenuModifyGroup" anchor="last"/>
+          <separator />
+          <action id="colt.as.runWith" text="Run With COLT" class="codeOrchestra.colt.as.plugin.actions.AsRunWithColtAction" />
+      </group>
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
