@@ -95,9 +95,16 @@ public class AsColtPluginController {
             runCompilationAction(coltRemoteService, ideaProject, compilationAction, actionEvent);
         }
 
-        new Task.Backgroundable(ideaProject, "Live Build", false) {
+        new Task.Backgroundable(ideaProject, "COLT Build", false) {
             @Override
             public void run(@NotNull ProgressIndicator progressIndicator) {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    // ignore
+                }
+                ideaProject.getComponent(ColtRemoteServiceProvider.class).fireMessageAvailable("Running " + compilationAction.getName());
+
                 // Report errors and warnings
                 ColtRemoteServiceProvider remoteServiceProvider = ideaProject.getComponent(ColtRemoteServiceProvider.class);
 

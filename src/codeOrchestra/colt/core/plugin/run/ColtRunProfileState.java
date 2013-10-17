@@ -34,8 +34,12 @@ public class ColtRunProfileState implements RunProfileState {
         consoleView.attachToProcess(process);
 
         ColtAsRemoteService service = process.getService();
-        AsColtPluginController.runCompilationAction(service, project, AsColtPluginController.BASE_LIVE, null);
 
+        if (service == null) {
+            throw new ExecutionException("Can't establish connection with COLT");
+        }
+
+        AsColtPluginController.runCompilationAction(service, project, AsColtPluginController.BASE_LIVE, null);
         return new DefaultExecutionResult(consoleView, process);
     }
 

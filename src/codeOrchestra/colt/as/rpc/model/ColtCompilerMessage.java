@@ -16,7 +16,8 @@ public class ColtCompilerMessage {
     }
 
     public ColtCompilerMessage(String fullMessage) {
-        this.fullMessage = fullMessage;
+        this.fullMessage = fullMessage + "\n";
+        this.type = "Info";
     }
 
     public String getSourcePath() {

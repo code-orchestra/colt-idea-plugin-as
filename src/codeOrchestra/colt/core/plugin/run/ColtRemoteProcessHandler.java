@@ -40,7 +40,11 @@ public class ColtRemoteProcessHandler extends ProcessHandler implements ColtRemo
 
     @Override
     public void onMessage(ColtCompilerMessage coltCompilerMessage) {
-        notifyTextAvailable(coltCompilerMessage.getFullMessage(), coltCompilerMessage.getType().equals("Error") ? ProcessOutputTypes.STDERR : ProcessOutputTypes.STDOUT);
+        if ("Info".equals(coltCompilerMessage.getType())) {
+            notifyTextAvailable(coltCompilerMessage.getFullMessage(), ProcessOutputTypes.SYSTEM);
+        } else {
+            notifyTextAvailable(coltCompilerMessage.getFullMessage(), coltCompilerMessage.getType().equals("Error") ? ProcessOutputTypes.STDERR : ProcessOutputTypes.STDOUT);
+        }
     }
 
     @Override

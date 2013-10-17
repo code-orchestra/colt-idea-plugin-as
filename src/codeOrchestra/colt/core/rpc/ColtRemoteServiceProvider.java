@@ -188,6 +188,10 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
         listeners.clear();
     }
 
+    public synchronized void fireMessageAvailable(String message) {
+        fireCompileMessageAvailable(new ColtCompilerMessage(message));
+    }
+
     public synchronized void fireCompileMessageAvailable(ColtCompilerMessage coltCompilerMessage) {
         for (ColtRemoteServiceListener listener : listeners) {
             listener.onMessage(coltCompilerMessage);
