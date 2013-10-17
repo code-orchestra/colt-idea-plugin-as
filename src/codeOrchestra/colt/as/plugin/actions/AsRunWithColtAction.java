@@ -41,24 +41,34 @@ public class AsRunWithColtAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent actionEvent) {
-        // 0 - check if such configuration already exists
-        // TODO: implement
-
-        // 1 - export project
         VirtualFile[] virtualFileArray = (VirtualFile[]) actionEvent.getDataContext().getData("virtualFileArray");
-        String mailClassPath = virtualFileArray[0].getPath();
+        String mainClassPath = virtualFileArray[0].getPath();
         String mainClassName = virtualFileArray[0].getNameWithoutExtension();
-        String projectPath = AsColtPluginController.export(actionEvent.getProject(), mainClassName, mailClassPath);
 
-        // 2 - create a run configuration
+        String runConfigurationName = mainClassName;
+        runWithColt(actionEvent, mainClassPath, mainClassName, runConfigurationName);
+    }
+
+    private void runWithColt(AnActionEvent actionEvent, String mainClassPath, String mainClassName, String runConfigurationName) {
+        // 0 - check if such configuration already exists
         RunManager runManager = RunManager.getInstance(actionEvent.getProject());
-        ColtConfigurationType coltConfigurationType = null;
-        for (ConfigurationType configurationType : runManager.getConfigurationFactories()) {
-            if (configurationType instanceof ColtConfigurationType) {
-                coltConfigurationType = (ColtConfigurationType) configurationType;
-                break;
+        for (RunnerAndConfigurationSettings runnerAndConfigurationSettings : runManager.getConfigurationSettings(getColtConfigurationType(runManager))) {
+            if (runnerAndConfigurationSettings.getName().equals(runConfigurationName)) {
+                if (runnerAndConfigurationSettings.getConfiguration() instanceof AsColtRunConfiguration) {
+                    ProgramRunnerUtil.executeConfiguration(actionEvent.getProject(), runnerAndConfigurationSettings, DefaultRunExecutor.getRunExecutorInstance());
+                    return;
+                } else {
+                    runWithColt(actionEvent, mainClassPath, mainClassName, runConfigurationName + " (1)");
+                    return;
+                }
             }
         }
+
+        // 1 - export project
+        String projectPath = AsColtPluginController.export(actionEvent.getProject(), mainClassName, mainClassPath);
+
+        // 2 - create a run configuration
+        ColtConfigurationType coltConfigurationType = getColtConfigurationType(runManager);
         if (coltConfigurationType == null) {
             throw new IllegalStateException("Can't locate COLT configuration type");
         }
@@ -72,7 +82,7 @@ public class AsRunWithColtAction extends AnAction {
         if (coltConfigurationFactory == null) {
             throw new IllegalStateException("Can't locate COLT configuration factory");
         }
-        RunnerAndConfigurationSettings runConfiguration = runManager.createRunConfiguration(mainClassName, coltConfigurationFactory);
+        RunnerAndConfigurationSettings runConfiguration = runManager.createRunConfiguration(runConfigurationName, coltConfigurationFactory);
         AsColtRunConfiguration asColtRunConfiguration = (AsColtRunConfiguration) runConfiguration.getConfiguration();
         asColtRunConfiguration.setColtProjectPath(projectPath);
         if (runManager instanceof RunManagerEx) {
@@ -82,6 +92,17 @@ public class AsRunWithColtAction extends AnAction {
 
         // 3 - run configuration
         ProgramRunnerUtil.executeConfiguration(actionEvent.getProject(), runConfiguration, DefaultRunExecutor.getRunExecutorInstance());
+    }
+
+    private ColtConfigurationType getColtConfigurationType(RunManager runManager) {
+        ColtConfigurationType coltConfigurationType = null;
+        for (ConfigurationType configurationType : runManager.getConfigurationFactories()) {
+            if (configurationType instanceof ColtConfigurationType) {
+                coltConfigurationType = (ColtConfigurationType) configurationType;
+                break;
+            }
+        }
+        return coltConfigurationType;
     }
 
 }
