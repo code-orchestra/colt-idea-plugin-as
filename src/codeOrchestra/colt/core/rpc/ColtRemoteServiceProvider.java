@@ -7,6 +7,7 @@ import codeOrchestra.colt.core.plugin.launch.ColtLauncher;
 import codeOrchestra.colt.core.plugin.launch.ColtPathNotConfiguredException;
 import codeOrchestra.colt.core.plugin.view.ColtStatusWidget;
 import codeOrchestra.colt.core.rpc.discovery.ColtServiceLocator;
+import codeOrchestra.colt.core.rpc.model.ColtState;
 import codeOrchestra.colt.core.rpc.security.InvalidShortCodeException;
 import codeOrchestra.colt.core.rpc.security.TooManyFailedCodeTypeAttemptsException;
 import codeOrchestra.colt.core.workset.Workset;
@@ -33,12 +34,12 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
 
     public ColtRemoteServiceProvider(Project project) {
         super(project);
-        connectionFinisherThread = new ConnectionFinisherThread();
+        connectionUpdateThread = new ConnectionStateUpdateThread();
     }
 
     private ColtRemoteService coltRemoteService;
     private List<ColtRemoteServiceListener> listeners = new ArrayList<ColtRemoteServiceListener>();
-    private ConnectionFinisherThread connectionFinisherThread;
+    private ConnectionStateUpdateThread connectionUpdateThread;
     private ColtStatusWidget coltStatusWidget;
 
     public <S extends ColtRemoteService> void initAndConnect(Class<S> serviceClass, String projectPath, String projectName) throws ColtPathNotConfiguredException, ExecutionException, IOException, ProcessCanceledException {
@@ -178,12 +179,12 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
 
     @Override
     public void initComponent() {
-        connectionFinisherThread.start();
+        connectionUpdateThread.start();
     }
 
     @Override
     public void disposeComponent() {
-        connectionFinisherThread.stopRightTHere();
+        connectionUpdateThread.stopRightTHere();
         listeners.clear();
     }
 
@@ -193,7 +194,13 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
         }
     }
 
-    private class ConnectionFinisherThread extends Thread {
+    public synchronized void fireStateUpdate(ColtState state) {
+        for (ColtRemoteServiceListener listener : listeners) {
+            listener.onStateUpdate(state);
+        }
+    }
+
+    private class ConnectionStateUpdateThread extends Thread {
 
         private boolean mustStop;
 
@@ -213,7 +220,8 @@ public class ColtRemoteServiceProvider extends AbstractProjectComponent implemen
 
                 if (coltRemoteService != null) {
                     try {
-                        coltRemoteService.ping();
+                        ColtState state = coltRemoteService.getState();
+                        fireStateUpdate(state);
                     } catch (Throwable t) {
                         setColtRemoteService(null);
                     }

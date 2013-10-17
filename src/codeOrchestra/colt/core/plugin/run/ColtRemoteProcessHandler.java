@@ -4,6 +4,7 @@ import codeOrchestra.colt.as.rpc.model.ColtCompilerMessage;
 import codeOrchestra.colt.core.rpc.ColtRemoteService;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceListener;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
+import codeOrchestra.colt.core.rpc.model.ColtState;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.process.ProcessOutputTypes;
 import com.intellij.openapi.project.Project;
@@ -75,6 +76,10 @@ public class ColtRemoteProcessHandler extends ProcessHandler implements ColtRemo
 
     @Override
     public void onConnected() {
+    }
+
+    @Override
+    public void onStateUpdate(ColtState state) {
     }
 
     public <S extends ColtRemoteService> S getService() {

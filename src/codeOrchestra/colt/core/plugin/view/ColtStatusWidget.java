@@ -6,6 +6,7 @@ import codeOrchestra.colt.as.rpc.model.ColtCompilerMessage;
 import codeOrchestra.colt.core.plugin.icons.Icons;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceListener;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
+import codeOrchestra.colt.core.rpc.model.ColtState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.CustomStatusBarWidget;
@@ -88,9 +89,24 @@ public class ColtStatusWidget extends JButton implements CustomStatusBarWidget, 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                setIcon(Icons.LIVE_OFF);
+                setIcon(Icons.LIVE_SWITCHING);
                 setEnabled(true);
+            }
+        });
+    }
 
+    @Override
+    public void onStateUpdate(final ColtState state) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (state.getActiveConnections() != null && state.getActiveConnections().length > 0) {
+                    setIcon(Icons.LIVE_ON);
+                    setEnabled(true);
+                } else {
+                    setIcon(Icons.LIVE_SWITCHING);
+                    setEnabled(true);
+                }
             }
         });
     }
