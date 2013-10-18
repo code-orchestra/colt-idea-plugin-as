@@ -30,9 +30,11 @@
           <add-to-group group-id="MainMenu" anchor="after" relative-to-action="RunMenu" />
           <action id="colt.compile.live" class="codeOrchestra.colt.as.plugin.actions.ColtLiveBaseCompileAction" text="Live Build" description="Run Base Live Compilation" />
           <action id="colt.compile.production" class="codeOrchestra.colt.as.plugin.actions.ColtProductionCompileAction" text="Production Build" description="Run Production Compilation" />
+          <!--
           <separator/>
           <action id="colt.compile.run.live" class="codeOrchestra.colt.as.plugin.actions.ColtLiveBaseCompileAndRunAction" text="Live Build and Exec Run" description="Live Build and Exec Run" />
           <action id="colt.compile.run.production" class="codeOrchestra.colt.as.plugin.actions.ColtProductionCompileAndRunAction" text="Production Build and Exec Run" description="Production Build and Exec Run" />
+          -->
       </group>
 
       <group id="COLT.Run.Actions" text="Run With COLT">

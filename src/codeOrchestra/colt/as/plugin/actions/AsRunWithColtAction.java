@@ -30,6 +30,10 @@ public class AsRunWithColtAction extends AnAction {
 
         e.getPresentation().setIcon(Icons.COLT_ICON_16);
 
+        if (e.getProject() == null) {
+            e.getPresentation().setEnabled(false);
+        }
+
         VirtualFile[] virtualFileArray = (VirtualFile[]) e.getDataContext().getData("virtualFileArray");
         if (virtualFileArray != null && virtualFileArray.length == 1 && !virtualFileArray[0].isDirectory() &&
                 (virtualFileArray[0].getPath().toLowerCase().endsWith(".as") || virtualFileArray[0].getPath().toLowerCase().endsWith(".mxml"))) {

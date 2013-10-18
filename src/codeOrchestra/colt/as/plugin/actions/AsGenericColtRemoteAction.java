@@ -35,6 +35,8 @@ public abstract class AsGenericColtRemoteAction extends AnAction {
         if (project != null) {
             ColtRemoteServiceProvider remoteServiceProvider = project.getComponent(ColtRemoteServiceProvider.class);
             e.getPresentation().setEnabled(remoteServiceProvider.isConnected());
+        } else {
+            e.getPresentation().setEnabled(false);
         }
     }
 
