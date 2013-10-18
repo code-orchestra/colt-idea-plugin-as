@@ -88,6 +88,21 @@ public class AsColtPluginController {
     };
 
     public static void runCompilationAction(final ColtAsRemoteService coltRemoteService, final Project ideaProject, final CompilationAction compilationAction, final AnActionEvent actionEvent) {
+        // Report errors and warnings
+        final ColtRemoteServiceProvider remoteServiceProvider = ideaProject.getComponent(ColtRemoteServiceProvider.class);
+
+        if (!remoteServiceProvider.authorize()) {
+            int result = Messages.showDialog("This plugin needs an authorization from the COLT application.", "COLT Connectivity", new String[]{
+                    "Try again", "Cancel"
+            }, 0, Messages.getWarningIcon());
+
+            if (result == 0) {
+                runCompilationAction(coltRemoteService, ideaProject, compilationAction, actionEvent);
+            } else {
+                return;
+            }
+        }
+
         try {
             coltRemoteService.checkAuth(ColtSettings.getInstance().getSecurityToken());
         } catch (InvalidAuthTokenException e) {
@@ -104,9 +119,6 @@ public class AsColtPluginController {
                     // ignore
                 }
                 ideaProject.getComponent(ColtRemoteServiceProvider.class).fireMessageAvailable("Running " + compilationAction.getName());
-
-                // Report errors and warnings
-                ColtRemoteServiceProvider remoteServiceProvider = ideaProject.getComponent(ColtRemoteServiceProvider.class);
 
                 try {
                     ColtCompilationResult coltCompilationResult = compilationAction.doRunCompilation(coltRemoteService, actionEvent);

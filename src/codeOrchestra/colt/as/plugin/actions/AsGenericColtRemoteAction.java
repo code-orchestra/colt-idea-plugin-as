@@ -52,15 +52,6 @@ public abstract class AsGenericColtRemoteAction extends AnAction {
         ColtRemoteServiceProvider remoteServiceProvider = ideaProject.getComponent(ColtRemoteServiceProvider.class);
         ColtAsRemoteService coltRemoteService = remoteServiceProvider.getService();
 
-        /*
-        try {
-            coltRemoteService = DeadClass.get().getService();
-        } catch (ColtRemoteServiceUnavailableException e) {
-            Messages.showErrorDialog(e.getMessage(), COLT_TITLE);
-            return;
-        }
-        */
-
         // Authorize if haven't done it yet
         if (!remoteServiceProvider.authorize()) {
             int result = Messages.showDialog("This plugin needs an authorization from the COLT application.", COLT_TITLE, new String[]{
