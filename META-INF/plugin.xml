@@ -26,8 +26,8 @@
   </project-components>
 
   <actions>
-      <group id="COLT.Menu" text="COLT" description="COLT plugin menu">
-          <add-to-group group-id="MainMenu" anchor="after" relative-to-action="RunMenu" />
+      <group id="COLT.Menu" text="COLT" description="COLT plugin menu" popup="true">
+          <add-to-group group-id="BuildMenu" anchor="last" />
           <action id="colt.compile.live" class="codeOrchestra.colt.as.plugin.actions.ColtLiveBaseCompileAction" text="Live Build" description="Run Base Live Compilation" />
           <action id="colt.compile.production" class="codeOrchestra.colt.as.plugin.actions.ColtProductionCompileAction" text="Production Build" description="Run Production Compilation" />
           <!--
