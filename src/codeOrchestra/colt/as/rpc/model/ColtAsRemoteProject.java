@@ -3,7 +3,7 @@ package codeOrchestra.colt.as.rpc.model;
 /**
  * @author Alexander Eliseyev
  */
-public class ColtRemoteProject {
+public class ColtAsRemoteProject {
 
     private String parentIDEProjectPath;
 

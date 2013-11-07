@@ -1,6 +1,6 @@
 package codeOrchestra.colt.as.rpc.model.codec;
 
-import codeOrchestra.colt.as.rpc.model.ColtRemoteProject;
+import codeOrchestra.colt.as.rpc.model.ColtAsRemoteProject;
 import utils.StringUtils;
 import utils.XMLUtils;
 import org.w3c.dom.Document;
@@ -13,13 +13,13 @@ import java.util.Iterator;
 /**
  * @author Alexander Eliseyev
  */
-public class ColtRemoteProjectEncoder {
+public class ColtAsRemoteProjectEncoder {
 
     private Document projectDocument = XMLUtils.createDocument();
 
-    private ColtRemoteProject project;
+    private ColtAsRemoteProject project;
 
-    public ColtRemoteProjectEncoder(ColtRemoteProject project) {
+    public ColtAsRemoteProjectEncoder(ColtAsRemoteProject project) {
         this.project = project;
     }
 

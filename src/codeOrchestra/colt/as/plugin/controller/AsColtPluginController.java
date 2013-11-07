@@ -2,11 +2,11 @@ package codeOrchestra.colt.as.plugin.controller;
 
 import codeOrchestra.colt.as.plugin.actions.AsGenericColtRemoteAction;
 import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
+import codeOrchestra.colt.as.rpc.model.ColtAsRemoteProject;
 import codeOrchestra.colt.as.rpc.model.ColtCompilationResult;
+import codeOrchestra.colt.as.rpc.model.codec.ColtAsRemoteProjectEncoder;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
 import codeOrchestra.colt.core.rpc.model.ColtMessage;
-import codeOrchestra.colt.as.rpc.model.ColtRemoteProject;
-import codeOrchestra.colt.as.rpc.model.codec.ColtRemoteProjectEncoder;
 import codeOrchestra.colt.core.plugin.ColtSettings;
 import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
 import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
@@ -182,11 +182,11 @@ public class AsColtPluginController {
             }
         }
 
-        ColtRemoteProject coltProject = saveConfiguration(modulesPairs, project, projectName, mainClass);
+        ColtAsRemoteProject coltProject = saveConfiguration(modulesPairs, project, projectName, mainClass);
         return coltProject.getPath();
     }
 
-    private static ColtRemoteProject saveConfiguration(List<Pair<Module, Boolean>> modules, Project ideaProject, String projectName, String mainClass) {
+    private static ColtAsRemoteProject saveConfiguration(List<Pair<Module, Boolean>> modules, Project ideaProject, String projectName, String mainClass) {
         Module mainModule = null;
         for (Pair<Module, Boolean> modulePair : modules) {
             if (modulePair.getSecond()) {
@@ -195,7 +195,7 @@ public class AsColtPluginController {
             }
         }
 
-        ColtRemoteProject project = new ColtRemoteProject();
+        ColtAsRemoteProject project = new ColtAsRemoteProject();
 
         ArrayList<String> libPaths = new ArrayList<String>();
         ArrayList<String> srcPaths = new ArrayList<String>();
@@ -253,7 +253,7 @@ public class AsColtPluginController {
         project.setCompilerOptions(activeBC.getCompilerOptions().getAdditionalOptions());
 
         try {
-            XMLUtils.saveToFile(project.getPath(), new ColtRemoteProjectEncoder(project).toDocument());
+            XMLUtils.saveToFile(project.getPath(), new ColtAsRemoteProjectEncoder(project).toDocument());
         } catch (TransformerException e) {
             // TODO: handle nicely
             e.printStackTrace();
