@@ -1,9 +1,11 @@
 package codeOrchestra.colt.as.rpc.model;
 
+import codeOrchestra.colt.core.rpc.model.ColtRemoteProject;
+
 /**
  * @author Alexander Eliseyev
  */
-public class ColtAsRemoteProject {
+public class ColtAsRemoteProject extends ColtRemoteProject {
 
     private String parentIDEProjectPath;
 

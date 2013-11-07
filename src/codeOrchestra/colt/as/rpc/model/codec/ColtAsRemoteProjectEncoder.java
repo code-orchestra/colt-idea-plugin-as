@@ -1,26 +1,18 @@
 package codeOrchestra.colt.as.rpc.model.codec;
 
 import codeOrchestra.colt.as.rpc.model.ColtAsRemoteProject;
-import utils.StringUtils;
-import utils.XMLUtils;
+import codeOrchestra.colt.core.rpc.model.codec.ColtRemoteProjectEncoder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.Iterator;
+import utils.StringUtils;
 
 /**
  * @author Alexander Eliseyev
  */
-public class ColtAsRemoteProjectEncoder {
-
-    private Document projectDocument = XMLUtils.createDocument();
-
-    private ColtAsRemoteProject project;
+public class ColtAsRemoteProjectEncoder extends ColtRemoteProjectEncoder<ColtAsRemoteProject> {
 
     public ColtAsRemoteProjectEncoder(ColtAsRemoteProject project) {
-        this.project = project;
+        super(project);
     }
 
     public Document toDocument() {
@@ -121,63 +113,5 @@ public class ColtAsRemoteProjectEncoder {
 
         return projectDocument;
     }
-
-    private Element createElement(String name) {
-        return createElement(name, null);
-    }
-
-    private Element createElement(String name, String textValue) {
-        return createElement(name, textValue, null);
-    }
-
-    private Element createElement(String name, String textValue, Element parentElement) {
-        Element element = projectDocument.createElement(name);
-        if (textValue != null) {
-            element.setTextContent(textValue);
-        }
-        if (parentElement != null) {
-            parentElement.appendChild(element);
-        }
-        return element;
-    }
-
-    private String safe(String str) {
-        return safe(str, "");
-    }
-
-    private String safe(String str, String defaultValue) {
-        return StringUtils.isEmpty(str) ? defaultValue : str;
-    }
-
-    private String createFileSetFromPathArray(String[] paths) {
-        if (paths == null || paths.length == 0) {
-            return "";
-        }
-
-        File baseDir = new File(project.getPath()).getParentFile();
-
-        StringBuilder sb = new StringBuilder();
-        Iterator<String> pathIterator = Arrays.asList(paths).iterator();
-        while (pathIterator.hasNext()) {
-            String path = pathIterator.next();
-            File file = new File(path);
-            if (file.getPath().startsWith(baseDir.getPath())) {
-                String relativePath = file.getPath().replace(baseDir.getPath(), "");
-                if (relativePath.startsWith("/") || relativePath.startsWith("\\")) {
-                    relativePath = relativePath.substring(1, relativePath.length());
-                }
-
-                sb.append(relativePath);
-            } else {
-                sb.append(file.getPath());
-            }
-
-            if (pathIterator.hasNext()) {
-                sb.append(", ");
-            }
-        }
-        return sb.toString();
-    }
-
 
 }
