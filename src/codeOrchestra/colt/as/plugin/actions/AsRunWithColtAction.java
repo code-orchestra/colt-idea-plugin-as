@@ -4,7 +4,7 @@ import codeOrchestra.colt.as.plugin.controller.AsColtPluginController;
 import codeOrchestra.colt.as.plugin.run.AsColtConfigurationFactory;
 import codeOrchestra.colt.as.plugin.run.AsColtRunConfiguration;
 import codeOrchestra.colt.core.plugin.icons.Icons;
-import codeOrchestra.colt.core.plugin.run.ColtConfigurationType;
+import codeOrchestra.colt.as.plugin.run.ColtConfigurationType;
 import com.intellij.execution.ProgramRunnerUtil;
 import com.intellij.execution.RunManager;
 import com.intellij.execution.RunManagerEx;

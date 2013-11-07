@@ -1,13 +1,15 @@
 package codeOrchestra.colt.as.rpc.model;
 
+import codeOrchestra.colt.core.rpc.model.ColtMessage;
+
 /**
  * @author Alexander Eliseyev
  */
 public class ColtCompilationResult {
 
     private boolean successful;
-    private ColtCompilerMessage[] errorMessages;
-    private ColtCompilerMessage[] warningMessages;
+    private ColtMessage[] errorMessages;
+    private ColtMessage[] warningMessages;
 
     public ColtCompilationResult() {
     }
@@ -20,19 +22,19 @@ public class ColtCompilationResult {
         this.successful = successful;
     }
 
-    public ColtCompilerMessage[] getErrorMessages() {
+    public ColtMessage[] getErrorMessages() {
         return errorMessages;
     }
 
-    public void setErrorMessages(ColtCompilerMessage[] errorMessages) {
+    public void setErrorMessages(ColtMessage[] errorMessages) {
         this.errorMessages = errorMessages;
     }
 
-    public ColtCompilerMessage[] getWarningMessages() {
+    public ColtMessage[] getWarningMessages() {
         return warningMessages;
     }
 
-    public void setWarningMessages(ColtCompilerMessage[] warningMessages) {
+    public void setWarningMessages(ColtMessage[] warningMessages) {
         this.warningMessages = warningMessages;
     }
 

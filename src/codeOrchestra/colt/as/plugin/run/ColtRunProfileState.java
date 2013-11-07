@@ -1,4 +1,4 @@
-package codeOrchestra.colt.core.plugin.run;
+package codeOrchestra.colt.as.plugin.run;
 
 import codeOrchestra.colt.as.plugin.controller.AsColtPluginController;
 import codeOrchestra.colt.as.rpc.ColtAsRemoteService;

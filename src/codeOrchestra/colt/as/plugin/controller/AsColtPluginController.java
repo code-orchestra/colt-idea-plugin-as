@@ -3,15 +3,15 @@ package codeOrchestra.colt.as.plugin.controller;
 import codeOrchestra.colt.as.plugin.actions.AsGenericColtRemoteAction;
 import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
 import codeOrchestra.colt.as.rpc.model.ColtCompilationResult;
-import codeOrchestra.colt.as.rpc.model.ColtCompilerMessage;
+import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
+import codeOrchestra.colt.core.rpc.model.ColtMessage;
 import codeOrchestra.colt.as.rpc.model.ColtRemoteProject;
 import codeOrchestra.colt.as.rpc.model.codec.ColtRemoteProjectEncoder;
 import codeOrchestra.colt.core.plugin.ColtSettings;
-import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
 import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
 import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
-import codeOrchestra.utils.EventUtils;
-import codeOrchestra.utils.XMLUtils;
+import utils.EventUtils;
+import utils.XMLUtils;
 import com.intellij.lang.javascript.flex.FlexUtils;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfiguration;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfigurationManager;
@@ -132,15 +132,15 @@ public class AsColtPluginController {
                         statusBar.notifyProgressByBalloon(MessageType.ERROR, compilationAction.getName() + " has failed, check the error messages");
                     }
 
-                    for (ColtCompilerMessage coltCompilerMessage : coltCompilationResult.getErrorMessages()) {
+                    for (ColtMessage coltCompilerMessage : coltCompilationResult.getErrorMessages()) {
                         remoteServiceProvider.fireCompileMessageAvailable(coltCompilerMessage);
                     }
-                    for (ColtCompilerMessage coltCompilerMessage : coltCompilationResult.getWarningMessages()) {
+                    for (ColtMessage coltCompilerMessage : coltCompilationResult.getWarningMessages()) {
                         remoteServiceProvider.fireCompileMessageAvailable(coltCompilerMessage);
 
                     }
                 } catch (ColtRemoteTransferableException e) {
-                    remoteServiceProvider.fireCompileMessageAvailable(new ColtCompilerMessage("Can't compile with COLT: " + e.getMessage()));
+                    remoteServiceProvider.fireCompileMessageAvailable(new ColtMessage("Can't compile with COLT: " + e.getMessage()));
                 }
             }
         }.queue();

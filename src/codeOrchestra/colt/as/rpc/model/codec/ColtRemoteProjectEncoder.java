@@ -1,8 +1,8 @@
 package codeOrchestra.colt.as.rpc.model.codec;
 
 import codeOrchestra.colt.as.rpc.model.ColtRemoteProject;
-import codeOrchestra.utils.StringUtils;
-import codeOrchestra.utils.XMLUtils;
+import utils.StringUtils;
+import utils.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

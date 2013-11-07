@@ -2,9 +2,7 @@ package codeOrchestra.colt.as.plugin.run;
 
 import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
 import codeOrchestra.colt.core.plugin.launch.ColtPathNotConfiguredException;
-import codeOrchestra.colt.core.plugin.run.ColtRunProfileState;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
-import codeOrchestra.utils.StringUtils;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.application.ApplicationConfigurationType;
@@ -25,6 +23,7 @@ import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import utils.StringUtils;
 
 import java.io.IOException;
 import java.util.Arrays;

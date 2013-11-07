@@ -1,9 +1,9 @@
-package codeOrchestra.colt.core.plugin.run;
+package codeOrchestra.colt.as.plugin.run;
 
-import codeOrchestra.colt.as.rpc.model.ColtCompilerMessage;
 import codeOrchestra.colt.core.rpc.ColtRemoteService;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceListener;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
+import codeOrchestra.colt.core.rpc.model.ColtMessage;
 import codeOrchestra.colt.core.rpc.model.ColtState;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.process.ProcessOutputTypes;
@@ -39,7 +39,7 @@ public class ColtRemoteProcessHandler extends ProcessHandler implements ColtRemo
     }
 
     @Override
-    public void onMessage(ColtCompilerMessage coltCompilerMessage) {
+    public void onMessage(ColtMessage coltCompilerMessage) {
         if ("Info".equals(coltCompilerMessage.getType())) {
             notifyTextAvailable(coltCompilerMessage.getFullMessage(), ProcessOutputTypes.SYSTEM);
         } else {
