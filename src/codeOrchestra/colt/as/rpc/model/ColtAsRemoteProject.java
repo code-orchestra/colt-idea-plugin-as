@@ -9,9 +9,6 @@ public class ColtAsRemoteProject extends ColtRemoteProject {
 
     private String parentIDEProjectPath;
 
-    private String path;
-    private String name;
-
     private String[] sources;
     private String[] libraries;
     private String[] assets;
@@ -37,22 +34,6 @@ public class ColtAsRemoteProject extends ColtRemoteProject {
 
     public void setParentIDEProjectPath(String parentIDEProjectPath) {
         this.parentIDEProjectPath = parentIDEProjectPath;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String[] getSources() {
