@@ -1,6 +1,6 @@
 package codeOrchestra.colt.as.plugin.controller;
 
-import codeOrchestra.colt.as.plugin.actions.AsGenericColtRemoteAction;
+import codeOrchestra.colt.core.plugin.actions.AbstractColtRemoteAction;
 import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
 import codeOrchestra.colt.as.rpc.model.ColtAsRemoteProject;
 import codeOrchestra.colt.as.rpc.model.ColtCompilationResult;
@@ -157,7 +157,7 @@ public class AsColtPluginController {
     public static String export(Project project, String projectName, String mainClass) {
         Module[] allModules = ModuleManager.getInstance(project).getModules();
         if (allModules.length == 0) {
-            Messages.showErrorDialog("No modules in the ideaProject", AsGenericColtRemoteAction.COLT_TITLE);
+            Messages.showErrorDialog("No modules in the ideaProject", AbstractColtRemoteAction.COLT_TITLE);
             return null;
         }
 
@@ -171,9 +171,9 @@ public class AsColtPluginController {
                 values[i] = allModules[i].getName();
             }
 
-            int result = Messages.showChooseDialog("Choose the Main module", AsGenericColtRemoteAction.COLT_TITLE, values, values[0], null);
+            int result = Messages.showChooseDialog("Choose the Main module", AbstractColtRemoteAction.COLT_TITLE, values, values[0], null);
             if (result == -1) {
-                Messages.showErrorDialog("No Main module was selected", AsGenericColtRemoteAction.COLT_TITLE);
+                Messages.showErrorDialog("No Main module was selected", AbstractColtRemoteAction.COLT_TITLE);
                 return null;
             } else {
                 for (int i = 0; i < allModules.length; i++) {

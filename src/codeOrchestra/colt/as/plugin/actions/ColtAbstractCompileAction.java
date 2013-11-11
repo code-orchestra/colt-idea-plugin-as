@@ -2,6 +2,7 @@ package codeOrchestra.colt.as.plugin.actions;
 
 import codeOrchestra.colt.as.plugin.controller.AsColtPluginController;
 import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
+import codeOrchestra.colt.core.plugin.actions.AbstractColtRemoteAction;
 import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.Nullable;
@@ -9,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Alexander Eliseyev
  */
-public abstract class ColtAbstractCompileAction extends AsGenericColtRemoteAction {
+public abstract class ColtAbstractCompileAction extends AbstractColtRemoteAction<ColtAsRemoteService> {
 
     protected ColtAbstractCompileAction(@Nullable String text) {
         super(text);
