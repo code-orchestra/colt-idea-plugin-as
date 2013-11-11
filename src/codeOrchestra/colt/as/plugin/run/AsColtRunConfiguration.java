@@ -2,6 +2,7 @@ package codeOrchestra.colt.as.plugin.run;
 
 import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
 import codeOrchestra.colt.core.plugin.launch.ColtPathNotConfiguredException;
+import codeOrchestra.colt.core.plugin.run.ColtRunConfigurationModule;
 import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
@@ -32,7 +33,7 @@ import java.util.Collection;
 /**
  * @author Alexander Eliseyev
  */
-public class AsColtRunConfiguration extends ModuleBasedConfiguration<AsRunConfigurationModule> implements RunConfiguration {
+public class AsColtRunConfiguration extends ModuleBasedConfiguration<ColtRunConfigurationModule> implements RunConfiguration {
 
     private String coltProjectPath;
 
@@ -41,7 +42,7 @@ public class AsColtRunConfiguration extends ModuleBasedConfiguration<AsRunConfig
     }
 
     protected AsColtRunConfiguration(final String name, final Project project, final ConfigurationFactory factory) {
-        super(name, new AsRunConfigurationModule(project), factory);
+        super(name, new ColtRunConfigurationModule(project), factory);
     }
 
     @Override
@@ -79,7 +80,7 @@ public class AsColtRunConfiguration extends ModuleBasedConfiguration<AsRunConfig
             return null;
         }
 
-        return new ColtRunProfileState(getProject());
+        return new AsColtRunProfileState(getProject());
     }
 
     @Override
@@ -103,8 +104,8 @@ public class AsColtRunConfiguration extends ModuleBasedConfiguration<AsRunConfig
 
     @Override
     protected ModuleBasedConfiguration createInstance() {
-        ModuleBasedConfiguration<AsRunConfigurationModule> configuration =
-                (ModuleBasedConfiguration<AsRunConfigurationModule>) getFactory().createTemplateConfiguration(getProject());
+        ModuleBasedConfiguration<ColtRunConfigurationModule> configuration =
+                (ModuleBasedConfiguration<ColtRunConfigurationModule>) getFactory().createTemplateConfiguration(getProject());
         configuration.setName(getName());
         return configuration;
     }

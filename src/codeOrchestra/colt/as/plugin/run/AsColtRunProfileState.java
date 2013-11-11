@@ -2,6 +2,7 @@ package codeOrchestra.colt.as.plugin.run;
 
 import codeOrchestra.colt.as.plugin.controller.AsColtPluginController;
 import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
+import codeOrchestra.colt.core.plugin.run.ColtRemoteProcessHandler;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
@@ -18,11 +19,11 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Alexander Eliseyev
  */
-public class ColtRunProfileState implements RunProfileState {
+public class AsColtRunProfileState implements RunProfileState {
 
     private Project project;
 
-    public ColtRunProfileState(Project project) {
+    public AsColtRunProfileState(Project project) {
         this.project = project;
     }
 

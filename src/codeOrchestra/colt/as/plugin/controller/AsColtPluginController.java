@@ -1,17 +1,15 @@
 package codeOrchestra.colt.as.plugin.controller;
 
-import codeOrchestra.colt.core.plugin.actions.AbstractColtRemoteAction;
 import codeOrchestra.colt.as.rpc.ColtAsRemoteService;
 import codeOrchestra.colt.as.rpc.model.ColtAsRemoteProject;
 import codeOrchestra.colt.as.rpc.model.ColtCompilationResult;
 import codeOrchestra.colt.as.rpc.model.codec.ColtAsRemoteProjectEncoder;
-import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
-import codeOrchestra.colt.core.rpc.model.ColtMessage;
 import codeOrchestra.colt.core.plugin.ColtSettings;
+import codeOrchestra.colt.core.plugin.actions.AbstractColtRemoteAction;
+import codeOrchestra.colt.core.rpc.ColtRemoteServiceProvider;
 import codeOrchestra.colt.core.rpc.ColtRemoteTransferableException;
+import codeOrchestra.colt.core.rpc.model.ColtMessage;
 import codeOrchestra.colt.core.rpc.security.InvalidAuthTokenException;
-import utils.EventUtils;
-import utils.XMLUtils;
 import com.intellij.lang.javascript.flex.FlexUtils;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfiguration;
 import com.intellij.lang.javascript.flex.projectStructure.model.FlexBuildConfigurationManager;
@@ -32,6 +30,8 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import org.jetbrains.annotations.NotNull;
+import utils.EventUtils;
+import utils.XMLUtils;
 
 import javax.xml.transform.TransformerException;
 import java.util.ArrayList;

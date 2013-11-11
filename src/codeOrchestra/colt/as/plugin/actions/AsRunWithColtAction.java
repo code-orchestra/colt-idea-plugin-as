@@ -2,9 +2,9 @@ package codeOrchestra.colt.as.plugin.actions;
 
 import codeOrchestra.colt.as.plugin.controller.AsColtPluginController;
 import codeOrchestra.colt.as.plugin.run.AsColtConfigurationFactory;
+import codeOrchestra.colt.as.plugin.run.AsColtConfigurationType;
 import codeOrchestra.colt.as.plugin.run.AsColtRunConfiguration;
 import codeOrchestra.colt.core.plugin.icons.Icons;
-import codeOrchestra.colt.as.plugin.run.ColtConfigurationType;
 import com.intellij.execution.ProgramRunnerUtil;
 import com.intellij.execution.RunManager;
 import com.intellij.execution.RunManagerEx;
@@ -72,7 +72,7 @@ public class AsRunWithColtAction extends AnAction {
         String projectPath = AsColtPluginController.export(actionEvent.getProject(), mainClassName, mainClassPath);
 
         // 2 - create a run configuration
-        ColtConfigurationType coltConfigurationType = getColtConfigurationType(runManager);
+        AsColtConfigurationType coltConfigurationType = getColtConfigurationType(runManager);
         if (coltConfigurationType == null) {
             throw new IllegalStateException("Can't locate COLT configuration type");
         }
@@ -98,11 +98,11 @@ public class AsRunWithColtAction extends AnAction {
         ProgramRunnerUtil.executeConfiguration(actionEvent.getProject(), runConfiguration, DefaultRunExecutor.getRunExecutorInstance());
     }
 
-    private ColtConfigurationType getColtConfigurationType(RunManager runManager) {
-        ColtConfigurationType coltConfigurationType = null;
+    private AsColtConfigurationType getColtConfigurationType(RunManager runManager) {
+        AsColtConfigurationType coltConfigurationType = null;
         for (ConfigurationType configurationType : runManager.getConfigurationFactories()) {
-            if (configurationType instanceof ColtConfigurationType) {
-                coltConfigurationType = (ColtConfigurationType) configurationType;
+            if (configurationType instanceof AsColtConfigurationType) {
+                coltConfigurationType = (AsColtConfigurationType) configurationType;
                 break;
             }
         }
