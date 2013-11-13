@@ -18,9 +18,17 @@ public class ColtAsFacade extends AbstractProjectComponent implements ColtFacade
     }
 
     @Override
-    public void startLive() {
+    public String getRequestorCode() {
+        return "IDEA Plugin";
+    }
 
+    @Override
+    public void startLive() {
         AsColtPluginController.runCompilationAction((ColtAsRemoteService) myProject.getComponent(ColtRemoteServiceProvider.class).getService(), myProject, AsColtPluginController.BASE_LIVE, null);
     }
 
+    @Override
+    public void startProduction() {
+        AsColtPluginController.runCompilationAction((ColtAsRemoteService) myProject.getComponent(ColtRemoteServiceProvider.class).getService(), myProject, AsColtPluginController.PRODUCTION, null);
+    }
 }
